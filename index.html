@@ -42,26 +42,26 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #2b3d2a; f
 @keyframes heroFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
 #screen-start .center .game-title { font-size: 108px; font-weight: 800; color: #5ea2ff; text-align: center; line-height: 1.4; text-shadow: 0 8px 0 rgba(0,0,0,0.3), 0 0 30px rgba(84,108,85,0.9); letter-spacing: 2px; text-transform: uppercase; margin-top: 120px; }
 #screen-start .center .game-title .accent { color: #5ea2ff; }
-#screen-start .center .game-sub, #screen-carousel .center .game-sub { color: #31452f; text-align: center; line-height: 1.35; background: url('assets/images/popup_desc.svg') center / contain no-repeat; width: 700px; height: 340px; display: flex; align-items: center; justify-content: center; padding: 30px 50px 40px; }
+#screen-start .center .game-sub, #screen-carousel .center .game-sub { color: #31452f; text-align: center; line-height: 1.35; background: url('assets/images/popup_desc.svg') center / contain no-repeat; width: 1060px; height: 510px; display: flex; align-items: center; justify-content: center; padding: 40px 80px 50px; margin-top: 80px; }
 .carousel-inline { width: 100%; display: flex; flex-direction: column; height: 100%; }
 .carousel-inline-slides { position: relative; flex: 1; }
 .carousel-inline-slide { display: none; position: absolute; inset: 0; flex-direction: column; justify-content: center; align-items: center; padding: 0 20px; }
 .carousel-inline-slide.active { display: flex; animation: carouselFade 0.4s ease; }
 @keyframes carouselFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.carousel-inline-title { font-size: 26px; font-weight: 800; color: #5c3b1a; margin-bottom: 10px; text-align: center; }
-.carousel-inline-items { display: flex; flex-direction: column; gap: 6px; width: 100%; }
-.carousel-inline-item { font-size: 18px; font-weight: 700; color: #31452f; line-height: 1.4; text-align: left; padding: 4px 10px; }
+.carousel-inline-title { font-size: 38px; font-weight: 800; color: #5c3b1a; margin-bottom: 20px; text-align: center; }
+.carousel-inline-items { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.carousel-inline-item { font-size: 28px; font-weight: 700; color: #31452f; line-height: 1.45; text-align: left; padding: 6px 16px; }
 .carousel-inline-controls { display: flex; justify-content: center; align-items: center; gap: 14px; margin: auto 0 12px 0; }
 .carousel-inline-dots { display: flex; gap: 10px; align-items: center; }
-.carousel-inline-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(81,103,77,0.35); border: 2px solid #51674d; cursor: pointer; transition: background 0.3s ease, transform 0.2s ease; flex-shrink: 0; }
+.carousel-inline-dot { width: 18px; height: 18px; border-radius: 50%; background: rgba(81,103,77,0.35); border: 2px solid #51674d; cursor: pointer; transition: background 0.3s ease, transform 0.2s ease; flex-shrink: 0; }
 .carousel-inline-dot.active { background: #5c3b1a; transform: scale(1.25); }
-.carousel-arrow { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(180deg, #5c3b1a, #3e2810); border: 2px solid #cab97d; color: #fcf4df; font-size: 18px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.15s ease, background 0.2s ease; box-shadow: 0 3px 0 rgba(0,0,0,0.3); line-height: 1; padding: 0; flex-shrink: 0; }
+.carousel-arrow { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(180deg, #5c3b1a, #3e2810); border: 3px solid #cab97d; color: #fcf4df; font-size: 24px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.15s ease, background 0.2s ease; box-shadow: 0 4px 0 rgba(0,0,0,0.3); line-height: 1; padding: 0; flex-shrink: 0; }
 .carousel-arrow:hover { transform: scale(1.12); background: linear-gradient(180deg, #7a5228, #5c3b1a); }
 .carousel-arrow:active { transform: scale(0.94) translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
 .carousel-arrow.hidden { visibility: hidden; }
-#screen-start .center .start-buttons, #screen-carousel .center .start-buttons { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 10px; }
-#screen-start .center .start-buttons { margin-top: 200px; }
-#screen-start .center #btn-mulai { width: 180px; height: 52px; }
+#screen-start .center .start-buttons, #screen-carousel .center .start-buttons { position: absolute; bottom: 220px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+#screen-start .center #btn-mulai, #btn-lanjut { width: 180px; height: 52px; }
+#btn-lanjut .lbl { font-size: 24px; padding-top: 2px; }
 .wide-btn { width: 330px; height: 96px; cursor: pointer; position: relative; background: transparent; border: none; padding: 0; filter: drop-shadow(0 6px 0 rgba(0,0,0,0.3)); transition: transform 0.15s ease; }
 .wide-btn img { width: 100%; height: 100%; pointer-events: none; }
 .wide-btn .lbl { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 700; color: #fcf4df; text-shadow: 0 2px 0 rgba(0,0,0,0.45); pointer-events: none; letter-spacing: 1px; padding-top: 6px; }
@@ -100,12 +100,12 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #2b3d2a; f
 .modal-card { position: relative; animation: modalIn 0.35s ease; }
 @keyframes modalIn { from { transform: scale(0.82); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-#screen-start .intro-count { position: relative; font-size: 30px; font-weight: 800; color: #ffe9a8; text-shadow: 0 3px 0 rgba(0,0,0,0.35); background: rgba(81,103,77,0.85); padding: 6px 24px; border-radius: 14px; border: 3px solid #fcf4df; display: none; }
-#screen-start .intro-count.active { display: block; }
-#screen-start .intro-close { position: absolute; top: -8px; right: -8px; width: 16px; height: 16px; z-index: 10; cursor: pointer; filter: drop-shadow(0 2px 0 rgba(0,0,0,0.25)); transition: transform 0.15s ease; background: transparent; border: none; padding: 0; }
-#screen-start .intro-close img { width: 100%; height: 100%; pointer-events: none; }
-#screen-start .intro-close:hover { transform: scale(1.12); }
-#screen-start .intro-close:active { transform: scale(0.94) translateY(2px); }
+.intro-count { position: relative; font-size: 30px; font-weight: 800; color: #ffe9a8; text-shadow: 0 3px 0 rgba(0,0,0,0.35); background: rgba(81,103,77,0.85); padding: 6px 24px; border-radius: 14px; border: 3px solid #fcf4df; display: none; }
+.intro-count.active { display: block; }
+.intro-close { position: absolute; top: -8px; right: -8px; width: 16px; height: 16px; z-index: 10; cursor: pointer; filter: drop-shadow(0 2px 0 rgba(0,0,0,0.25)); transition: transform 0.15s ease; background: transparent; border: none; padding: 0; }
+.intro-close img { width: 100%; height: 100%; pointer-events: none; }
+.intro-close:hover { transform: scale(1.12); }
+.intro-close:active { transform: scale(0.94) translateY(2px); }
 
 #guide-modal .guide-card { width: 1460px; background: linear-gradient(180deg, #fcf4df, #f1e3c0); border: 8px solid #51674d; border-radius: 30px; padding: 40px 50px; box-shadow: 0 14px 40px rgba(0,0,0,0.4); color: #31452f; text-align: center; }
 #guide-modal .guide-title { font-size: 48px; font-weight: 800; color: #5c3b1a; margin-bottom: 16px; }
@@ -174,11 +174,11 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #2b3d2a; f
 #result-box .r-actions { display: flex; justify-content: center; gap: 36px; }
 #result-box .r-actions .wide-btn { width: 280px; height: 88px; }
 
-#exit-modal .exit-card { width: 760px; background: linear-gradient(180deg, #fcf4df, #f1e3c0); border: 8px solid #51674d; border-radius: 28px; padding: 44px; text-align: center; color: #31452f; box-shadow: 0 14px 40px rgba(0,0,0,0.4); }
-#exit-modal .exit-title { font-size: 44px; font-weight: 800; color: #5c3b1a; margin-bottom: 14px; }
-#exit-modal .exit-text { font-size: 26px; margin-bottom: 30px; }
-#exit-modal .exit-actions { display: flex; justify-content: center; gap: 28px; }
-#exit-modal .exit-actions .wide-btn { width: 250px; height: 84px; }
+#exit-modal .exit-card, #fs-modal .exit-card { width: 760px; background: linear-gradient(180deg, #fcf4df, #f1e3c0); border: 8px solid #51674d; border-radius: 28px; padding: 44px; text-align: center; color: #31452f; box-shadow: 0 14px 40px rgba(0,0,0,0.4); }
+#exit-modal .exit-title, #fs-modal .exit-title { font-size: 44px; font-weight: 800; color: #5c3b1a; margin-bottom: 14px; }
+#exit-modal .exit-text, #fs-modal .exit-text { font-size: 26px; margin-bottom: 30px; }
+#exit-modal .exit-actions, #fs-modal .exit-actions { display: flex; justify-content: center; gap: 28px; }
+#exit-modal .exit-actions .wide-btn, #fs-modal .exit-actions .wide-btn { width: 250px; height: 84px; }
 
 .confetti { position: absolute; top: -20px; width: 14px; height: 22px; border-radius: 3px; opacity: 0.95; animation: confettiFall linear forwards; z-index: 60; pointer-events: none; }
 @keyframes confettiFall { to { transform: translateY(1120px) rotate(720deg); } }
@@ -202,7 +202,7 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
 <div id="orientation-overlay">
   <div class="o-icon">📱</div>
   <div class="o-title">Mohon Putar Perangkat</div>
-  <div class="o-desc">Pengalaman bermain terbaik didapatkan dalam mode mendatar (Landscape).<br>Silakan putar perangkat Anda.</div>
+  <div class="o-desc">Pengalaman bermain terbaik didapatkan dalam mode mendatar (Landscape) supaya bisa layar penuh (Full Screen).<br>Silakan putar perangkat Anda.</div>
 </div>
 <div id="stage">
 
@@ -267,6 +267,10 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
       <div class="left">
         <img class="logo" src="assets/images/Logo-Kemendikdasmen.svg" alt="Kemendikdasmen">
       </div>
+      <div class="right">
+        <button class="icon-btn" id="btn-mute-carousel" title="Putar/Hentikan Suara"><img src="assets/images/btn_unmute.svg" alt="suara"></button>
+        <button class="icon-btn" id="btn-fs-carousel" title="Layar penuh"><img src="assets/images/btn_fullscreen.svg" alt="fullscreen"></button>
+      </div>
     </div>
     <div class="center">
       <div class="game-sub">
@@ -295,7 +299,7 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
         </div>
       </div>
       <div class="start-buttons">
-        <button class="wide-btn btn-css" id="btn-lanjut" style="margin-top: 20px;"><span class="lbl">LANJUT</span></button>
+        <button class="wide-btn btn-css" id="btn-lanjut"><span class="lbl">LANJUT</span></button>
       </div>
       <div class="intro-count" id="intro-count">
         <button class="intro-close" id="btn-intro-close" title="Lewati narasi"><img src="assets/images/btn_close.svg" alt="tutup"></button>
@@ -459,6 +463,17 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
       <div class="exit-actions">
         <button class="wide-btn btn-css" id="btn-exit-yes"><span class="lbl">YA</span></button>
         <button class="wide-btn btn-css" id="btn-exit-no"><span class="lbl">TIDAK</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="fs-modal">
+    <div class="exit-card">
+      <div class="exit-title">Mode Layar Penuh</div>
+      <div class="exit-text">Apakah Anda ingin masuk ke mode layar penuh?</div>
+      <div class="exit-actions">
+        <button class="wide-btn btn-css" id="btn-fs-yes"><span class="lbl">YA</span></button>
+        <button class="wide-btn btn-css" id="btn-fs-no"><span class="lbl">TIDAK</span></button>
       </div>
     </div>
   </div>
@@ -788,21 +803,35 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
   });
 
   $('#btn-mulai').addEventListener('click', function () {
-    // if (!introFinished) return;
     playClick();
+    openModal('fs-modal');
+  });
+
+  function proceedMulai() {
+    closeModal('fs-modal');
     playBgm();
     showScreen('carousel');
     playIntro();
+  }
+
+  $('#btn-fs-yes').addEventListener('click', function () {
+    playClick();
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(function(){});
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      document.documentElement.webkitRequestFullscreen();
+    }
+    proceedMulai();
+  });
+
+  $('#btn-fs-no').addEventListener('click', function () {
+    playClick();
+    proceedMulai();
   });
 
   $('#btn-lanjut').addEventListener('click', function () {
     playClick();
-    if (introAud) {
-      introAud.pause();
-      introAud = null;
-    }
-    introPlaying = false;
-    $('#intro-count').classList.remove('active');
+    skipIntro();
     
     showScreen('map');
     updateProgress();
@@ -999,10 +1028,12 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
   $('#btn-mute-map').addEventListener('click', toggleMusic);
   $('#btn-mute-quiz').addEventListener('click', toggleMusic);
   $('#btn-mute-challenge').addEventListener('click', toggleMusic);
+  $('#btn-mute-carousel').addEventListener('click', toggleMusic);
   $('#btn-fs-start').addEventListener('click', function () { playClick(); toggleFullscreen(); });
   $('#btn-fs-map').addEventListener('click', function () { playClick(); toggleFullscreen(); });
   $('#btn-fs-quiz').addEventListener('click', function () { playClick(); toggleFullscreen(); });
   $('#btn-fs-challenge').addEventListener('click', function () { playClick(); toggleFullscreen(); });
+  $('#btn-fs-carousel').addEventListener('click', function () { playClick(); toggleFullscreen(); });
   $('#btn-start-quiz').addEventListener('click', function () {
     playClick();
     startQuiz();
@@ -1077,7 +1108,7 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
     const src = introPlaying ? IMG + 'btn_vo%20on.svg' : IMG + 'btn_vo%20off.svg';
     $$('#btn-mute-start img').forEach(function (i) { i.src = src; });
     const src2 = soundOn ? IMG + 'btn_unmute.svg' : IMG + 'btn_mute.svg';
-    $$('#btn-mute-map img, #btn-mute-quiz img').forEach(function (i) { i.src = src2; });
+    $$('#btn-mute-map img, #btn-mute-quiz img, #btn-mute-challenge img, #btn-mute-carousel img').forEach(function (i) { i.src = src2; });
   }
   function skipIntro() {
     playClick();
