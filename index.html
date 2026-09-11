@@ -32,7 +32,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #2b3d2a; f
 .icon-btn:hover { transform: scale(1.12); }
 .icon-btn:active { transform: scale(0.94) translateY(2px); }
 
-#screen-start .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 44px; padding-top: 130px; z-index: 5; }
+#screen-start .center, #screen-carousel .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 44px; padding-top: 130px; z-index: 5; }
 .start-hero-img { position: absolute; bottom: 0; height: 820px; z-index: 4; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.35)); pointer-events: none; }
 .start-hero-left-wrap { position: absolute; bottom: 0; left: 30px; width: 512px; height: 820px; z-index: 4; pointer-events: none; animation: heroFloat 3.5s ease-in-out infinite; overflow: visible; }
 .start-hero-left-wrap .silhouette { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; object-fit: contain; filter: brightness(0) opacity(0.35) drop-shadow(0 0 30px rgba(0,0,0,0.6)) drop-shadow(0 8px 20px rgba(49,69,47,0.5)); }
@@ -40,9 +40,9 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #2b3d2a; f
 .hero-right { right: 40px; animation: heroFloat 3.5s ease-in-out infinite 0.5s; }
 @keyframes magnifyPulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 2px 8px rgba(230,168,23,0.4)); } 50% { transform: translate(-50%, -50%) scale(1.08); filter: drop-shadow(0 4px 16px rgba(230,168,23,0.6)); } }
 @keyframes heroFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
-#screen-start .center .game-title { font-size: 108px; font-weight: 800; color: #5ea2ff; text-align: center; line-height: 1.4; text-shadow: 0 8px 0 rgba(0,0,0,0.3), 0 0 30px rgba(84,108,85,0.9); letter-spacing: 2px; text-transform: uppercase; }
+#screen-start .center .game-title { font-size: 108px; font-weight: 800; color: #5ea2ff; text-align: center; line-height: 1.4; text-shadow: 0 8px 0 rgba(0,0,0,0.3), 0 0 30px rgba(84,108,85,0.9); letter-spacing: 2px; text-transform: uppercase; margin-top: 120px; }
 #screen-start .center .game-title .accent { color: #5ea2ff; }
-#screen-start .center .game-sub { color: #31452f; text-align: center; line-height: 1.35; background: url('assets/images/popup_desc.svg') center / contain no-repeat; width: 700px; height: 340px; display: flex; align-items: center; justify-content: center; padding: 30px 50px 40px; }
+#screen-start .center .game-sub, #screen-carousel .center .game-sub { color: #31452f; text-align: center; line-height: 1.35; background: url('assets/images/popup_desc.svg') center / contain no-repeat; width: 700px; height: 340px; display: flex; align-items: center; justify-content: center; padding: 30px 50px 40px; }
 .carousel-inline { width: 100%; display: flex; flex-direction: column; height: 100%; }
 .carousel-inline-slides { position: relative; flex: 1; }
 .carousel-inline-slide { display: none; position: absolute; inset: 0; flex-direction: column; justify-content: center; align-items: center; padding: 0 20px; }
@@ -59,7 +59,8 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #2b3d2a; f
 .carousel-arrow:hover { transform: scale(1.12); background: linear-gradient(180deg, #7a5228, #5c3b1a); }
 .carousel-arrow:active { transform: scale(0.94) translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
 .carousel-arrow.hidden { visibility: hidden; }
-#screen-start .center .start-buttons { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 10px; }
+#screen-start .center .start-buttons, #screen-carousel .center .start-buttons { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 10px; }
+#screen-start .center .start-buttons { margin-top: 200px; }
 #screen-start .center #btn-mulai { width: 180px; height: 52px; }
 .wide-btn { width: 330px; height: 96px; cursor: pointer; position: relative; background: transparent; border: none; padding: 0; filter: drop-shadow(0 6px 0 rgba(0,0,0,0.3)); transition: transform 0.15s ease; }
 .wide-btn img { width: 100%; height: 100%; pointer-events: none; }
@@ -189,9 +190,20 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #2b3d2a; f
 #hero-modal .hero-photo { display: block; }
 #hero-modal { overflow: hidden; }
 button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; }
+
+#orientation-overlay { position: fixed; inset: 0; z-index: 99999; background: #1c2a1c; color: #fcf4df; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; display: none; }
+#orientation-overlay .o-icon { font-size: 80px; margin-bottom: 20px; animation: rotatePhone 2s infinite ease-in-out; }
+#orientation-overlay .o-title { font-size: 32px; font-weight: 800; margin-bottom: 12px; color: #ffd75e; }
+#orientation-overlay .o-desc { font-size: 20px; line-height: 1.5; font-weight: 600; opacity: 0.9; }
+@keyframes rotatePhone { 0% { transform: rotate(0deg); } 50% { transform: rotate(-90deg); } 100% { transform: rotate(-90deg); } }
 </style>
 </head>
 <body>
+<div id="orientation-overlay">
+  <div class="o-icon">📱</div>
+  <div class="o-title">Mohon Putar Perangkat</div>
+  <div class="o-desc">Pengalaman bermain terbaik didapatkan dalam mode mendatar (Landscape).<br>Silakan putar perangkat Anda.</div>
+</div>
 <div id="stage">
 
   <section id="screen-start" class="screen active">
@@ -243,6 +255,20 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
     </div>
     <div class="center">
       <div class="game-title"><div>Jejak Pahlawan</div><div class="accent">Nusantara</div></div>
+      <div class="start-buttons">
+        <button class="wide-btn" id="btn-mulai"><img src="assets/images/btn_mulai.svg" alt=""></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-carousel" class="screen">
+    <img class="bg" src="assets/images/BG.svg" alt="">
+    <div class="topbar">
+      <div class="left">
+        <img class="logo" src="assets/images/Logo-Kemendikdasmen.svg" alt="Kemendikdasmen">
+      </div>
+    </div>
+    <div class="center">
       <div class="game-sub">
         <div class="carousel-inline" id="carousel-inline">
           <div class="carousel-inline-slides" id="carousel-inline-slides">
@@ -269,7 +295,7 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
         </div>
       </div>
       <div class="start-buttons">
-        <button class="wide-btn" id="btn-mulai"><img src="assets/images/btn_mulai.svg" alt=""></button>
+        <button class="wide-btn btn-css" id="btn-lanjut" style="margin-top: 20px;"><span class="lbl">LANJUT</span></button>
       </div>
       <div class="intro-count" id="intro-count">
         <button class="intro-close" id="btn-intro-close" title="Lewati narasi"><img src="assets/images/btn_close.svg" alt="tutup"></button>
@@ -476,7 +502,13 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
   const $$ = function (s) { return document.querySelectorAll(s); };
 
   const stage = $('#stage');
-  const screens = { start: $('#screen-start'), map: $('#screen-map'), 'challenge-intro': $('#screen-challenge-intro'), quiz: $('#screen-quiz') };
+  const screens = {
+    start: $('#screen-start'),
+    carousel: $('#screen-carousel'),
+    map: $('#screen-map'),
+    quiz: $('#screen-quiz'),
+    'challenge-intro': $('#screen-challenge-intro')
+  };
 
   let soundOn = true;
   let voOn = true;
@@ -490,14 +522,21 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
     const vw = window.visualViewport ? window.visualViewport.width : window.innerWidth;
     const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
     const isFS = !!document.fullscreenElement;
-    const s = Math.max(vw / 1920, vh / 1080);
-    const cx = (vw - 1920 * s) / 2;
-    const cy = (vh - 1080 * s) / 2;
-    stage.style.transform = 'scale(' + s + ')';
-    stage.style.left = cx + 'px';
-    stage.style.top = cy + 'px';
-    document.body.style.backgroundPosition = cx + 'px ' + cy + 'px';
-    document.body.style.backgroundSize = (1920 * s) + 'px ' + (1080 * s) + 'px';
+    
+    const overlay = $('#orientation-overlay');
+    if (vh > vw) {
+      if (overlay) overlay.style.display = 'flex';
+    } else {
+      if (overlay) overlay.style.display = 'none';
+    }
+
+    const sx = vw / 1920;
+    const sy = vh / 1080;
+    stage.style.transform = 'scale(' + sx + ', ' + sy + ')';
+    stage.style.left = '0px';
+    stage.style.top = '0px';
+    document.body.style.backgroundPosition = '0px 0px';
+    document.body.style.backgroundSize = '100% 100%';
     var padTop = isFS ? '18px' : '18px';
     var padSide = isFS ? '30px' : '80px';
     var topOffset = isFS ? '0px' : '68px';
@@ -752,6 +791,19 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
     // if (!introFinished) return;
     playClick();
     playBgm();
+    showScreen('carousel');
+    playIntro();
+  });
+
+  $('#btn-lanjut').addEventListener('click', function () {
+    playClick();
+    if (introAud) {
+      introAud.pause();
+      introAud = null;
+    }
+    introPlaying = false;
+    $('#intro-count').classList.remove('active');
+    
     showScreen('map');
     updateProgress();
     renderPins();
@@ -1044,7 +1096,6 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
     if (e && e.target && e.target.closest && e.target.closest('#btn-mulai')) return;
     if (introPlaying) return;
     playBgm();
-    playIntro();
   }
   window.addEventListener('load', tryIntro);
   window.addEventListener('pointerdown', tryIntro);
