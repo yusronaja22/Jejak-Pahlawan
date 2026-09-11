@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<title>Jejak Pahlawan Nusantara</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #2b3d2a; font-family: "Nunito", "Segoe UI", "Trebuchet MS", sans-serif; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+
+#stage { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+
+.screen { position: absolute; inset: 0; display: none; overflow: hidden; }
+.screen.active { display: block; }
+
+.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+.topbar { position: absolute; top: 0; left: 0; right: 0; height: 110px; padding: 18px 30px 0 36px; display: flex; justify-content: space-between; align-items: center; z-index: 20; pointer-events: none; }
+.topbar .left, .topbar .right { display: flex; align-items: center; gap: 16px; pointer-events: auto; }
+.topbar .right { margin-left: auto; }
+.title-box { background: linear-gradient(180deg, rgba(51,74,50,0.92), rgba(38,55,37,0.92)); border: 3px solid #fcf4df; border-radius: 18px; padding: 10px 26px; color: #fcf4df; text-align: center; box-shadow: 0 6px 0 rgba(0,0,0,0.25); }
+.title-box .main { font-size: 34px; font-weight: 700; letter-spacing: 1px; color: #5ea2ff; }
+.title-box .sub { font-size: 17px; opacity: 0.92; }
+
+.topbar .logo { height: 70px; width: auto; filter: drop-shadow(0 3px 0 rgba(0,0,0,0.25)); pointer-events: auto; }
+
+.icon-btn { width: 78px; height: 78px; cursor: pointer; filter: drop-shadow(0 4px 0 rgba(0,0,0,0.25)); transition: transform 0.15s ease; background: transparent; border: none; padding: 0; }
+.icon-btn img { width: 100%; height: 100%; pointer-events: none; }
+.icon-btn:hover { transform: scale(1.12); }
+.icon-btn:active { transform: scale(0.94) translateY(2px); }
+
+#screen-start .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 44px; padding-top: 130px; z-index: 5; }
+.start-hero-img { position: absolute; bottom: 0; height: 820px; z-index: 4; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.35)); pointer-events: none; }
+.start-hero-left-wrap { position: absolute; bottom: 0; left: 30px; width: 512px; height: 820px; z-index: 4; pointer-events: none; animation: heroFloat 3.5s ease-in-out infinite; overflow: visible; }
+.start-hero-left-wrap .silhouette { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; object-fit: contain; filter: brightness(0) opacity(0.35) drop-shadow(0 0 30px rgba(0,0,0,0.6)) drop-shadow(0 8px 20px rgba(49,69,47,0.5)); }
+.start-hero-left-wrap .magnify-icon { position: absolute; left: 65.2%; top: 38%; transform: translate(-50%, -50%); width: 140px; height: 140px; z-index: 5; animation: magnifyPulse 2.5s ease-in-out infinite; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4)); }
+.hero-right { right: 40px; animation: heroFloat 3.5s ease-in-out infinite 0.5s; }
+@keyframes magnifyPulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 2px 8px rgba(230,168,23,0.4)); } 50% { transform: translate(-50%, -50%) scale(1.08); filter: drop-shadow(0 4px 16px rgba(230,168,23,0.6)); } }
+@keyframes heroFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+#screen-start .center .game-title { font-size: 108px; font-weight: 800; color: #5ea2ff; text-align: center; line-height: 1.4; text-shadow: 0 8px 0 rgba(0,0,0,0.3), 0 0 30px rgba(84,108,85,0.9); letter-spacing: 2px; text-transform: uppercase; }
+#screen-start .center .game-title .accent { color: #5ea2ff; }
+#screen-start .center .game-sub { color: #31452f; text-align: center; line-height: 1.35; background: url('assets/images/popup_desc.svg') center / contain no-repeat; width: 700px; height: 340px; display: flex; align-items: center; justify-content: center; padding: 30px 50px 40px; }
+.carousel-inline { width: 100%; display: flex; flex-direction: column; height: 100%; }
+.carousel-inline-slides { position: relative; flex: 1; }
+.carousel-inline-slide { display: none; position: absolute; inset: 0; flex-direction: column; justify-content: center; align-items: center; padding: 0 20px; }
+.carousel-inline-slide.active { display: flex; animation: carouselFade 0.4s ease; }
+@keyframes carouselFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.carousel-inline-title { font-size: 26px; font-weight: 800; color: #5c3b1a; margin-bottom: 10px; text-align: center; }
+.carousel-inline-items { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.carousel-inline-item { font-size: 18px; font-weight: 700; color: #31452f; line-height: 1.4; text-align: left; padding: 4px 10px; }
+.carousel-inline-controls { display: flex; justify-content: center; align-items: center; gap: 14px; margin: auto 0 12px 0; }
+.carousel-inline-dots { display: flex; gap: 10px; align-items: center; }
+.carousel-inline-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(81,103,77,0.35); border: 2px solid #51674d; cursor: pointer; transition: background 0.3s ease, transform 0.2s ease; flex-shrink: 0; }
+.carousel-inline-dot.active { background: #5c3b1a; transform: scale(1.25); }
+.carousel-arrow { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(180deg, #5c3b1a, #3e2810); border: 2px solid #cab97d; color: #fcf4df; font-size: 18px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.15s ease, background 0.2s ease; box-shadow: 0 3px 0 rgba(0,0,0,0.3); line-height: 1; padding: 0; flex-shrink: 0; }
+.carousel-arrow:hover { transform: scale(1.12); background: linear-gradient(180deg, #7a5228, #5c3b1a); }
+.carousel-arrow:active { transform: scale(0.94) translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
+.carousel-arrow.hidden { visibility: hidden; }
+#screen-start .center .start-buttons { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 10px; }
+#screen-start .center #btn-mulai { width: 180px; height: 52px; }
+.wide-btn { width: 330px; height: 96px; cursor: pointer; position: relative; background: transparent; border: none; padding: 0; filter: drop-shadow(0 6px 0 rgba(0,0,0,0.3)); transition: transform 0.15s ease; }
+.wide-btn img { width: 100%; height: 100%; pointer-events: none; }
+.wide-btn .lbl { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 700; color: #fcf4df; text-shadow: 0 2px 0 rgba(0,0,0,0.45); pointer-events: none; letter-spacing: 1px; padding-top: 6px; }
+.wide-btn:hover { transform: scale(1.07); }
+.wide-btn:active { transform: scale(0.95) translateY(3px); }
+.wide-btn.locked { filter: grayscale(0.9) drop-shadow(0 4px 0 rgba(0,0,0,0.3)); opacity: 0.6; }
+.wide-btn.locked:hover { transform: none; cursor: not-allowed; }
+.wide-btn.btn-css { background: linear-gradient(180deg, #86ad86, #4e7a4e 55%, #3c5f3c); border: 5px solid #fcf4df; border-radius: 22px; box-shadow: 0 6px 0 rgba(0,0,0,0.3); }
+
+#screen-map { background: linear-gradient(180deg, #6d8669, #97af95 60%, #c7cfa5); }
+#map-panel { position: absolute; left: 140px; right: 140px; top: 120px; bottom: 150px; display: flex; flex-direction: column; }
+#map-panel .map-title { text-align: center; font-size: 42px; font-weight: 800; color: #fcf4df; text-shadow: 0 4px 0 rgba(0,0,0,0.35); margin-bottom: 14px; }
+#map-viewport { position: relative; flex: 1; overflow: hidden; border-radius: 24px; border: 6px solid #fcf4df; box-shadow: 0 10px 30px rgba(0,0,0,0.35), inset 0 0 40px rgba(0,0,0,0.12); background: #8fb2a0; }
+#map-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform-origin: 0 0; transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform; }
+#map-canvas img.map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: fill; }
+.pin-btn { position: absolute; width: 3.1%; min-width: 20px; aspect-ratio: 0.78; transform: translate(-50%, -50%); cursor: pointer; background: transparent; border: none; padding: 0; z-index: 3; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.4)); transition: transform 0.15s ease; }
+.pin-btn img { width: 100%; height: 100%; pointer-events: none; }
+.pin-btn::after { content: attr(data-name); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%) scale(0.85); background: rgba(49,69,47,0.95); color: #fcf4df; font-size: 17px; font-weight: 700; padding: 6px 14px; border-radius: 10px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.15s ease; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+.pin-btn:hover { transform: translate(-50%, -50%) scale(1.25); z-index: 6; }
+.pin-btn:hover::after { opacity: 1; }
+.pin-btn.visited { filter: grayscale(0.5) opacity(0.55) drop-shadow(0 3px 3px rgba(0,0,0,0.3)); }
+.pin-btn.pulse { animation: pinPulse 1.4s infinite ease-in-out; }
+@keyframes pinPulse { 0%,100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -70%) scale(1.18); } }
+
+#map-footer { position: absolute; left: 140px; right: 140px; bottom: 22px; height: 104px; display: flex; align-items: center; justify-content: space-between; gap: 30px; z-index: 10; }
+#map-footer .progress { flex: 1; display: flex; align-items: center; gap: 18px; background: linear-gradient(180deg, rgba(51,74,50,0.92), rgba(38,55,37,0.92)); border: 3px solid #fcf4df; border-radius: 20px; padding: 14px 26px; color: #fcf4df; }
+#map-footer .progress .p-label { font-size: 24px; font-weight: 700; white-space: nowrap; }
+#map-footer .progress .p-track { flex: 1; height: 26px; background: #31452f; border-radius: 13px; overflow: hidden; border: 2px solid #fcf4df; }
+#map-footer .progress .p-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #90ae8a, #ffd75e); border-radius: 13px; transition: width 0.5s ease; }
+#map-footer .progress .p-count { font-size: 26px; font-weight: 800; color: #ffe9a8; white-space: nowrap; }
+#map-footer .btn-wrap { position: relative; width: 340px; height: 96px; }
+#map-footer .btn-wrap .wide-btn { position: absolute; inset: 0; }
+
+.modal { position: absolute; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; background: rgba(20,30,20,0.55); }
+.modal.active { display: flex; }
+.modal-card { position: relative; animation: modalIn 0.35s ease; }
+@keyframes modalIn { from { transform: scale(0.82); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+#screen-start .intro-count { position: relative; font-size: 30px; font-weight: 800; color: #ffe9a8; text-shadow: 0 3px 0 rgba(0,0,0,0.35); background: rgba(81,103,77,0.85); padding: 6px 24px; border-radius: 14px; border: 3px solid #fcf4df; display: none; }
+#screen-start .intro-count.active { display: block; }
+#screen-start .intro-close { position: absolute; top: -8px; right: -8px; width: 16px; height: 16px; z-index: 10; cursor: pointer; filter: drop-shadow(0 2px 0 rgba(0,0,0,0.25)); transition: transform 0.15s ease; background: transparent; border: none; padding: 0; }
+#screen-start .intro-close img { width: 100%; height: 100%; pointer-events: none; }
+#screen-start .intro-close:hover { transform: scale(1.12); }
+#screen-start .intro-close:active { transform: scale(0.94) translateY(2px); }
+
+#guide-modal .guide-card { width: 1460px; background: linear-gradient(180deg, #fcf4df, #f1e3c0); border: 8px solid #51674d; border-radius: 30px; padding: 40px 50px; box-shadow: 0 14px 40px rgba(0,0,0,0.4); color: #31452f; text-align: center; }
+#guide-modal .guide-title { font-size: 48px; font-weight: 800; color: #5c3b1a; margin-bottom: 16px; }
+#guide-modal .guide-visual { width: 100%; border-radius: 16px; border: 4px solid #51674d; margin-bottom: 18px; }
+#guide-modal .guide-text { font-size: 27px; line-height: 1.5; font-weight: 600; }
+#guide-modal .guide-text b { color: #5c3b1a; }
+#guide-modal .guide-close { margin-top: 22px; }
+#guide-modal .guide-close .wide-btn { width: 280px; height: 84px; margin: 0 auto; }
+
+#hero-modal .hero-card { display: flex; gap: 40px; align-items: flex-start; position: relative; }
+#hero-modal .hero-photo { width: 540px; flex-shrink: 0; position: relative; height: 940px; perspective: 1300px; }
+#hero-modal .hero-photo .hero-body3d { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform-style: preserve-3d; animation: heroSpin 4s linear infinite; z-index: 2; }
+@keyframes heroSpin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+#hero-modal .hero-photo .hero-body3d .face { position: absolute; left: 50%; bottom: 160px; height: 560px; width: auto; transform: translateX(-50%); filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); }
+#hero-modal .hero-photo .hero-body3d .front { transform: translateX(-50%) translateZ(20px); }
+#hero-modal .hero-photo .hero-body3d .back { transform: translateX(-50%) rotateY(180deg) translateZ(20px); }
+#hero-modal .hero-photo .hero-sprite { position: absolute; left: 50%; bottom: 64px; height: 728px; width: auto; transform: translateX(-50%); z-index: 3; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); display: none; }
+#hero-modal .hero-photo .hero-gif { position: absolute; left: 50%; bottom: 183px; max-height: 700px; width: auto; max-width: 90%; transform: translateX(-50%) scale(1.3); z-index: 3; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); display: none; }
+#hero-modal .hero-photo .hero-podium { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 70%; max-width: none; filter: none; z-index: 1; }
+#hero-modal .hero-info { width: 860px; background: linear-gradient(180deg, #fcf4df, #f1e3c0); border: 8px solid #51674d; border-radius: 28px; padding: 34px 40px; color: #31452f; box-shadow: 0 12px 34px rgba(0,0,0,0.35); margin-top: 220px; position: relative; }
+#hero-modal .hero-pic { float: right; width: 180px; height: auto; margin: 0 0 8px 18px; border: 4px solid #51674d; border-radius: 12px; box-shadow: 0 8px 18px rgba(0,0,0,0.3); }
+#hero-modal .hero-pic-source { float: right; clear: right; width: 180px; margin: 0 0 6px 18px; font-size: 11px; font-weight: 600; color: #7f6132; text-align: center; line-height: 1.3; }
+#hero-modal .info-scene { font-size: 26px; font-weight: 800; color: #5c3b1a; margin-bottom: 6px; }
+#hero-modal .info-name { font-size: 44px; font-weight: 800; color: #31452f; line-height: 1.15; margin-bottom: 16px; }
+#hero-modal .info-row { margin-bottom: 14px; }
+#hero-modal .info-row .r-label { display: inline-block; font-size: 20px; font-weight: 800; color: #fcf4df; background: #5c3b1a; padding: 3px 14px; border-radius: 10px; margin-bottom: 5px; }
+#hero-modal .info-row .r-val { font-size: 25px; font-weight: 700; color: #31452f; line-height: 1.35; }
+#hero-modal .info-story { font-size: 23px; line-height: 1.55; color: #31452f; background: rgba(252,244,223,0.75); border: 2px dashed #7f6132; border-radius: 14px; padding: 14px 18px; min-height: 60px; }
+#hero-modal .info-story .cursor { display: inline-block; width: 2px; height: 1em; background: #31452f; margin-left: 2px; vertical-align: text-bottom; animation: blink 0.6s infinite; }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+#hero-modal .info-actions { margin-top: 18px; display: flex; align-items: center; justify-content: flex-end; }
+#hero-modal .close-x { position: absolute; top: 206px; right: 0; width: 45px; height: 45px; z-index: 10; }
+
+#screen-challenge-intro { background: linear-gradient(180deg, #6d8669, #97af95 60%, #c7cfa5); }
+.challenge-intro-content { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 5; }
+.challenge-intro-card { width: 900px; background: linear-gradient(180deg, #fcf4df, #f1e3c0); border: 8px solid #51674d; border-radius: 30px; padding: 50px 60px; text-align: center; color: #31452f; box-shadow: 0 14px 40px rgba(0,0,0,0.4); animation: modalIn 0.4s ease; }
+.challenge-intro-title { font-size: 52px; font-weight: 800; color: #5c3b1a; margin-bottom: 24px; }
+.challenge-intro-desc { font-size: 26px; font-weight: 600; line-height: 1.6; margin-bottom: 36px; color: #31452f; }
+#screen-quiz { background: linear-gradient(180deg, #6d8669, #97af95 60%, #c7cfa5); }
+#quiz-box { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 1560px; max-height: 900px; background: linear-gradient(180deg, #fcf4df, #f1e3c0); border: 8px solid #51674d; border-radius: 30px; box-shadow: 0 14px 40px rgba(0,0,0,0.4); padding: 40px 60px; color: #31452f; display: flex; flex-direction: column; }
+#quiz-box .q-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+#quiz-box .q-title { font-size: 40px; font-weight: 800; color: #5c3b1a; }
+#quiz-box .q-progress { font-size: 26px; font-weight: 800; color: #31452f; background: #e3d3a6; padding: 6px 20px; border-radius: 14px; border: 3px solid #51674d; }
+#quiz-box .q-text { font-size: 34px; font-weight: 800; line-height: 1.35; margin-bottom: 30px; min-height: 96px; }
+#quiz-box .q-options { display: flex; gap: 30px; }
+#quiz-box .q-option { flex: 1; border: 5px solid #51674d; background: linear-gradient(180deg, #fffdf2, #f4e8c8); border-radius: 20px; padding: 26px 20px; font-size: 30px; font-weight: 700; color: #31452f; cursor: pointer; text-align: center; transition: transform 0.15s ease, background 0.2s ease; box-shadow: 0 6px 0 rgba(49,69,47,0.35); }
+#quiz-box .q-option:hover { transform: translateY(-4px); }
+#quiz-box .q-option:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(49,69,47,0.35); }
+#quiz-box .q-option.correct { background: linear-gradient(180deg, #bfe6b0, #8fce7a); border-color: #2f6b2f; color: #1f451f; }
+#quiz-box .q-option.wrong { background: linear-gradient(180deg, #f2b3a8, #e38375); border-color: #8a2f22; color: #5c1c12; }
+#quiz-box .q-option.disabled { cursor: default; }
+#quiz-box .q-next { margin-top: 26px; display: flex; justify-content: center; }
+#quiz-box .q-feedback { margin-top: 20px; font-size: 28px; font-weight: 800; text-align: center; min-height: 40px; color: #31452f; }
+
+#result-box { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 1500px; max-height: 940px; background: linear-gradient(180deg, #fcf4df, #f1e3c0); border: 8px solid #51674d; border-radius: 30px; box-shadow: 0 14px 40px rgba(0,0,0,0.4); padding: 40px 56px; color: #31452f; display: flex; flex-direction: column; text-align: center; overflow: auto; }
+#result-box .r-title { font-size: 64px; font-weight: 800; color: #5c3b1a; margin-bottom: 8px; text-shadow: 0 2px 0 rgba(0,0,0,0.1); }
+#result-box .r-podium-wrap { position: relative; width: 520px; margin: 0 auto 20px; }
+#result-box .r-podium { width: 100%; display: block; }
+#result-box .r-stars { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; }
+#result-box .r-stars .star { font-size: 56px; filter: drop-shadow(0 3px 6px rgba(92,59,26,0.45)); transition: transform 0.3s ease; }
+#result-box .r-stars .star.gold { color: #e6a817; text-shadow: 0 0 10px rgba(230,168,23,0.35); }
+#result-box .r-stars .star.empty { color: #c4b998; opacity: 0.45; }
+#result-box .r-feedback { font-size: 28px; font-weight: 800; color: #5c3b1a; line-height: 1.6; letter-spacing: 0.3px; margin-bottom: 22px; padding: 18px 36px; background: linear-gradient(180deg, rgba(252,244,223,0.85), rgba(241,227,192,0.85)); border: 4px solid #7f6132; border-radius: 18px; max-width: 1100px; margin-left: auto; margin-right: auto; box-shadow: 0 4px 12px rgba(92,59,26,0.15); }
+#result-box .r-challenge { background: rgba(252,244,223,0.75); border: 3px dashed #7f6132; border-radius: 16px; padding: 20px 28px; font-size: 23px; line-height: 1.5; text-align: left; margin-bottom: 24px; }
+#result-box .r-challenge b { color: #5c3b1a; }
+#result-box .r-actions { display: flex; justify-content: center; gap: 36px; }
+#result-box .r-actions .wide-btn { width: 280px; height: 88px; }
+
+#exit-modal .exit-card { width: 760px; background: linear-gradient(180deg, #fcf4df, #f1e3c0); border: 8px solid #51674d; border-radius: 28px; padding: 44px; text-align: center; color: #31452f; box-shadow: 0 14px 40px rgba(0,0,0,0.4); }
+#exit-modal .exit-title { font-size: 44px; font-weight: 800; color: #5c3b1a; margin-bottom: 14px; }
+#exit-modal .exit-text { font-size: 26px; margin-bottom: 30px; }
+#exit-modal .exit-actions { display: flex; justify-content: center; gap: 28px; }
+#exit-modal .exit-actions .wide-btn { width: 250px; height: 84px; }
+
+.confetti { position: absolute; top: -20px; width: 14px; height: 22px; border-radius: 3px; opacity: 0.95; animation: confettiFall linear forwards; z-index: 60; pointer-events: none; }
+@keyframes confettiFall { to { transform: translateY(1120px) rotate(720deg); } }
+
+.koin { position: absolute; width: 44px; height: 44px; font-size: 30px; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 50; animation: koinFly 0.9s ease-out forwards; }
+@keyframes koinFly { 0% { transform: translate(0,0) scale(0.6); opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(0,-120px) scale(1.15); opacity: 0; } }
+
+#hero-modal .modal-card { max-height: none; overflow: hidden; }
+#hero-modal .hero-photo { display: block; }
+#hero-modal { overflow: hidden; }
+button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <section id="screen-start" class="screen active">
+    <img class="bg" src="assets/images/BG.svg" alt="">
+    <div class="start-hero-left-wrap">
+      <img class="start-hero-img silhouette" src="assets/images/sisinga_00035.png" alt="Sisingamangaraja XII">
+      <svg class="magnify-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="lensGrad" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
+            <stop offset="100%" stop-color="rgba(252,244,223,0.08)"/>
+          </radialGradient>
+          <linearGradient id="handleGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#e6c56a"/>
+            <stop offset="50%" stop-color="#c9a84c"/>
+            <stop offset="100%" stop-color="#8b6914"/>
+          </linearGradient>
+          <linearGradient id="rimGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffe9a8"/>
+            <stop offset="40%" stop-color="#e6a817"/>
+            <stop offset="100%" stop-color="#8b6914"/>
+          </linearGradient>
+        </defs>
+        <!-- lens glow -->
+        <circle cx="46" cy="46" r="34" fill="rgba(255,215,0,0.12)"/>
+        <!-- outer rim -->
+        <circle cx="46" cy="46" r="30" fill="none" stroke="url(#rimGrad)" stroke-width="5"/>
+        <!-- inner rim -->
+        <circle cx="46" cy="46" r="25" fill="none" stroke="rgba(252,244,223,0.3)" stroke-width="1.5"/>
+        <!-- lens -->
+        <circle cx="46" cy="46" r="24" fill="url(#lensGrad)"/>
+        <!-- lens reflection -->
+        <ellipse cx="38" cy="38" rx="10" ry="7" fill="rgba(255,255,255,0.25)" transform="rotate(-30 38 38)"/>
+        <!-- handle -->
+        <rect x="64" y="64" width="8" height="32" rx="4" transform="rotate(-45 68 80)" fill="url(#handleGrad)" stroke="#8b6914" stroke-width="1"/>
+        <!-- handle ring -->
+        <circle cx="88" cy="88" r="5" fill="none" stroke="#e6a817" stroke-width="2.5"/>
+      </svg>
+    </div>
+    <img class="start-hero-img hero-right" src="assets/images/antasari_00025.png" alt="Pangeran Antasari">
+    <div class="topbar">
+      <div class="left">
+        <img class="logo" src="assets/images/Logo-Kemendikdasmen.svg" alt="Kemendikdasmen">
+      </div>
+      <div class="right">
+        <button class="icon-btn" id="btn-mute-start" title="Putar narasi pembuka"><img src="assets/images/btn_vo%20on.svg" alt="suara"></button>
+        <button class="icon-btn" id="btn-fs-start" title="Layar penuh"><img src="assets/images/btn_fullscreen.svg" alt="fullscreen"></button>
+      </div>
+    </div>
+    <div class="center">
+      <div class="game-title"><div>Jejak Pahlawan</div><div class="accent">Nusantara</div></div>
+      <div class="game-sub">
+        <div class="carousel-inline" id="carousel-inline">
+          <div class="carousel-inline-slides" id="carousel-inline-slides">
+            <div class="carousel-inline-slide active" data-index="0">
+              <div class="carousel-inline-title">Tujuan Pembelajaran</div>
+              <div class="carousel-inline-items">
+                <div class="carousel-inline-item">Kamu bisa menggali dan menelusuri sejarah perjuangan pahlawan di daerahmu!</div>
+                <div class="carousel-inline-item">Kamu bisa mengenali tokoh-tokoh pahlawan yang ada di daerahmu!</div>
+              </div>
+            </div>
+            <div class="carousel-inline-slide" data-index="1">
+              <div class="carousel-inline-title">Misi</div>
+              <div class="carousel-inline-items">
+                <div class="carousel-inline-item">Jelajahi pulau-pulau dari Sabang sampai Merauke.</div>
+                <div class="carousel-inline-item">Temukan kisah perjuangan para Pahlawan Nusantara.</div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-inline-controls">
+            <button class="carousel-arrow" id="btn-carousel-prev">&#10094;</button>
+            <div class="carousel-inline-dots" id="carousel-inline-dots"></div>
+            <button class="carousel-arrow" id="btn-carousel-next">&#10095;</button>
+          </div>
+        </div>
+      </div>
+      <div class="start-buttons">
+        <button class="wide-btn" id="btn-mulai"><img src="assets/images/btn_mulai.svg" alt=""></button>
+      </div>
+      <div class="intro-count" id="intro-count">
+        <button class="intro-close" id="btn-intro-close" title="Lewati narasi"><img src="assets/images/btn_close.svg" alt="tutup"></button>
+        <span id="intro-remaining">0</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-map" class="screen">
+    <div class="topbar">
+      <div class="left">
+        <img class="logo" src="assets/images/Logo-Kemendikdasmen.svg" alt="Kemendikdasmen">
+        <div class="title-box">
+          <div class="main">Jejak Pahlawan Nusantara</div>
+          <div class="sub">Klik tanda LOKASI di pulau untuk menemukan pahlawan</div>
+        </div>
+      </div>
+      <div class="right">
+        <button class="icon-btn" id="btn-guide" title="Petunjuk"><img src="assets/images/btn_petunjuk.svg" alt="petunjuk"></button>
+        <button class="icon-btn" id="btn-mute-map" title="Putar narasi pembuka"><img src="assets/images/btn_unmute.svg" alt="suara"></button>
+        <button class="icon-btn" id="btn-fs-map" title="Layar penuh"><img src="assets/images/btn_fullscreen.svg" alt="fullscreen"></button>
+      </div>
+    </div>
+
+    <div id="map-panel">
+      <div class="map-title">PETA NUSANTARA</div>
+      <div id="map-viewport">
+        <div id="map-canvas">
+          <img class="map" src="assets/images/map_indo.svg" alt="Peta Indonesia">
+          <div id="pins"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="map-footer">
+      <div class="progress">
+        <span class="p-label">Lokasi ditemukan</span>
+        <div class="p-track"><div class="p-fill" id="progress-fill"></div></div>
+        <span class="p-count" id="progress-count">0 / 13</span>
+      </div>
+      <div class="btn-wrap">
+        <button class="wide-btn btn-css locked" id="btn-tantangan"><span class="lbl">TANTANGAN</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-challenge-intro" class="screen">
+    <div class="topbar">
+      <div class="left">
+        <img class="logo" src="assets/images/Logo-Kemendikdasmen.svg" alt="Kemendikdasmen">
+        <div class="title-box">
+          <div class="main">Tantangan Pahlawan</div>
+          <div class="sub">Uji pengetahuanmu!</div>
+        </div>
+      </div>
+      <div class="right">
+        <button class="icon-btn" id="btn-mute-challenge" title="Putar narasi"><img src="assets/images/btn_unmute.svg" alt="suara"></button>
+        <button class="icon-btn" id="btn-fs-challenge" title="Layar penuh"><img src="assets/images/btn_fullscreen.svg" alt="fullscreen"></button>
+      </div>
+    </div>
+    <div class="challenge-intro-content">
+      <div class="challenge-intro-card">
+        <div class="challenge-intro-title">Tantangan Pahlawan Nusantara</div>
+        <div class="challenge-intro-desc">
+          Kamu telah menjelajahi seluruh pahlawan Nusantara! Sekarang saatnya menguji pengetahuanmu tentang para pahlawan yang telah kamu temukan.
+          <br><br>
+          Siapkan dirimu untuk menjawab 5 pertanyaan pilihan ganda. Jawab dengan teliti dan raih skor sempurna!
+        </div>
+        <button class="wide-btn btn-css locked" id="btn-start-quiz"><span class="lbl">MULAI TANTANGAN</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-quiz" class="screen">
+    <div class="topbar">
+      <div class="left">
+        <img class="logo" src="assets/images/Logo-Kemendikdasmen.svg" alt="Kemendikdasmen">
+        <div class="title-box">
+          <div class="main">Tantangan Pahlawan</div>
+          <div class="sub">Jawab dengan teliti, ya!</div>
+        </div>
+      </div>
+      <div class="right">
+        <button class="icon-btn" id="btn-mute-quiz" title="Putar narasi pembuka"><img src="assets/images/btn_unmute.svg" alt="suara"></button>
+        <button class="icon-btn" id="btn-fs-quiz" title="Layar penuh"><img src="assets/images/btn_fullscreen.svg" alt="fullscreen"></button>
+      </div>
+    </div>
+    <div id="quiz-box">
+      <div class="q-head">
+        <div class="q-title">Soal Pilihan Ganda</div>
+        <div class="q-progress" id="q-progress">Soal 1 dari 5</div>
+      </div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-options" id="q-options"></div>
+      <div class="q-feedback" id="q-feedback"></div>
+      <div class="q-next" id="q-next-wrap"></div>
+    </div>
+  </section>
+
+  <div class="modal" id="guide-modal">
+    <div class="modal-card guide-card">
+      <div class="guide-title">Petunjuk Menjelajah Jejak Pahlawan</div>
+      <img class="guide-visual" src="assets/images/map_indo.svg" alt="Peta Indonesia">
+      <div class="guide-text">Yuk, mulai penjelajahanmu dengan memilih dan mengklik tanda <b>LOKASI</b> di pulau yang kamu inginkan untuk menemukan pahlawan nasional dari berbagai daerah! Tokoh pahlawan hebat akan muncul, lengkap dengan <b>nama</b>, <b>asal daerah</b>, dan <b>kisahnya yang heroik</b>!</div>
+      <div class="guide-close"><button class="wide-btn btn-css" id="btn-guide-close"><span class="lbl">MENGERTI!</span></button></div>
+    </div>
+  </div>
+
+  <div class="modal" id="hero-modal">
+    <div class="modal-card hero-card" id="hero-card">
+      <button class="icon-btn close-x" id="btn-hero-close" title="Tutup"><img src="assets/images/btn_close.svg" alt="tutup"></button>
+      <div class="hero-photo">
+        <div class="hero-body3d">
+          <img class="face front" src="" alt="">
+          <img class="face back" src="" alt="">
+        </div>
+        <img class="hero-sprite" id="hero-sprite" src="" alt="">
+        <img class="hero-gif" id="hero-gif" src="" alt="">
+        <video class="hero-gif" id="hero-vid" src="" autoplay loop muted playsinline style="display:none;"></video>
+        <img class="hero-podium" src="assets/images/podium.png" alt="podium">
+      </div>
+      <div class="hero-info">
+        <img class="hero-pic" id="hero-pic" src="" alt="">
+        <div class="hero-pic-source" id="hero-pic-source"></div>
+        <div class="info-scene" id="hero-scene"></div>
+        <div class="info-name" id="hero-name"></div>
+        <div class="info-row">
+          <div class="r-label">Asal Daerah</div>
+          <div class="r-val" id="hero-origin"></div>
+        </div>
+        <div class="info-row">
+          <div class="r-label">Kisah</div>
+          <div class="info-story" id="hero-story"></div>
+        </div>
+        <div class="info-actions">
+          <button class="icon-btn" id="btn-vo" title="Narasi suara"><img src="assets/images/btn_vo%20on.svg" alt="vo"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="result-modal">
+    <div id="result-box">
+      <div class="r-title" id="result-title"></div>
+      <div class="r-feedback" id="result-feedback"></div>
+      <div class="r-podium-wrap">
+        <img class="r-podium" src="assets/images/podium.png" alt="">
+        <div class="r-stars" id="result-stars"></div>
+      </div>
+      <div class="r-actions">
+        <button class="wide-btn btn-css" id="btn-ulangi"><span class="lbl">ULANGI</span></button>
+        <button class="wide-btn btn-css" id="btn-keluar-final"><span class="lbl">KELUAR</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="exit-modal">
+    <div class="exit-card">
+      <div class="exit-title">Keluar dari Permainan?</div>
+      <div class="exit-text">Apakah kamu yakin ingin mengakhiri penjelajahan ini?</div>
+      <div class="exit-actions">
+        <button class="wide-btn btn-css" id="btn-exit-yes"><span class="lbl">YA</span></button>
+        <button class="wide-btn btn-css" id="btn-exit-no"><span class="lbl">TIDAK</span></button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const IMG = 'assets/images/';
+  const AUD = 'assets/audio/';
+  const ANIM = 'assets/animasi/';
+  const GIF = 'assets/animasiGIF/';
+
+  const HEROES = [
+    { id: 'sisingamangaraja', pin: [8.34, 20.5], name: 'Sisingamangaraja XII', origin: 'Bakkara, Sumatera Utara', island: 'Pulau Sumatera', story: 'Raja legendaris yang memimpin Perang Batak melawan tentara kolonial Belanda.', pic: IMG + 'pop%20sisingamangaraja%20XII.png', picSource: 'ikpni.or.id', anim: ANIM + 'sisingamangaraja.png', sprite: { base: ANIM + 'sisingamangaraja_sprite/sisingamangaraja_animate', n: 192 }, vid: GIF + 'sisinga.mp4', vo: AUD + 'vo_sisingamangaraja.mp3' },
+    { id: 'rasuna', pin: [12.16, 33.53], name: 'Hajjah Rangkayo Rasuna Said', origin: 'Maninjau, Sumatera Barat', island: 'Pulau Sumatera', story: 'Singa Betina pergerakan kemerdekaan yang dikenal lewat pidatonya yang tajam membela hak pendidikan kaum wanita.', pic: IMG + 'pop%20rasuna%20said.png', picSource: 'esi.kemenbud.go.id', anim: ANIM + 'rasuna%20said.png', vid: GIF + 'rasuna.mp4', vo: AUD + 'vo_rasuna%20said.mp3' },
+    { id: 'dewi', pin: [28.0, 69.5], name: 'Raden Dewi Sartika', origin: 'Bandung, Jawa Barat', island: 'Pulau Jawa', story: 'Tokoh pelopor pendidikan bagi kaum perempuan. Beliau mendirikan Sekolah Kautamaan Istri, sekolah istri pertama di Indonesia, agar perempuan pribumi mandiri dan cerdas.', pic: IMG + 'pop%20dewi%20sartika.png', picSource: 'ikpni.or.id', anim: ANIM + 'raden%20dewi%20sartika.png', vid: GIF + 'dewi%20sartika.mp4', vo: AUD + 'vo_dewi%20sartika.mp3' },
+    { id: 'kihajar', pin: [33.39, 73.5], name: 'Ki Hadjar Dewantara', origin: 'D.I. Yogyakarta, Pulau Jawa', island: 'Pulau Jawa', story: 'Bapak Pendidikan Nasional pendiri Perguruan Taman Siswa yang mencetuskan semboyan legendaris "Ing Ngarsa Sung Tuladha, Ing Madya Mangun Karsa, Tut Wuri Handayani".', pic: IMG + 'pop%20ki%20hadjar%20dewantara.png', picSource: 'ikpni.or.id', anim: ANIM + 'ki%20hadjar%20dewantara.png', vid: GIF + 'ki%20hadjar.mp4', vo: AUD + 'vo_ki%20hajar.mp3' },
+    { id: 'antasari', pin: [42.97, 51.68], name: 'Pangeran Antasari', origin: 'Kesultanan Banjar, Kalimantan Selatan', island: 'Pulau Kalimantan', story: 'Sultan Banjar pimpinan Perang Banjar yang pantang menyerah melawan Belanda dengan semboyan legendaris: "Haram Menyerah, Waja Sampai Kaputing!"', pic: IMG + 'pop%20pangeran%20antasari.png', picSource: 'ikpni.or.id', anim: ANIM + 'pangeran%20antasari.png', vid: GIF + 'antasari.mp4', vo: AUD + 'vo_pangeran%20antasari.mp3' },
+    { id: 'ngurah', pin: [43.91, 74.5], name: 'I Gusti Ngurah Rai', origin: 'Badung, Bali', island: 'Pulau Bali', story: 'Pemimpin Perang Puputan Margarana yang bertempur habis-habisan demi mempertahankan tanah Bali.', pic: IMG + 'pop%20i%20gusti%20ngurah%20rai.png', picSource: 'mow.anri.go.id', anim: ANIM + 'ngurah%20rai.png', vid: GIF + 'ngurang.mp4', vo: AUD + 'vo_i%20gusti%20ngurah%20rai.mp3' },
+    { id: 'tgkh', pin: [46.47, 75.5], name: 'TGKH. Muhammad Zainuddin Abdul Madjid', origin: 'Lombok, Nusa Tenggara Barat', island: 'Nusa Tenggara', story: 'Ulama pejuang pendiri organisasi Islam Nahdlatul Wathan (NW) sebagai pusat pendidikan moral pejuang kemerdekaan.', pic: IMG + 'pop%20TGKH%20Abdul%20Madjid.png', picSource: 'nwdi.or.id', anim: ANIM + 'tgkh%20abdul%20madjid.png', vid: GIF + 'tgkh.mp4', vo: AUD + 'vo_TGKH%20abdul%20majid.mp3' },
+    { id: 'zakaria', pin: [63.0, 82.0], name: 'Prof. Dr. Wilhelmus Zakaria Johannes', origin: 'Pulau Rote, NTT', island: 'Nusa Tenggara', story: 'Pahlawan nasional ahli radiologi/rontgen pertama di Indonesia yang berjasa besar dalam dunia kedokteran.', pic: IMG + 'pop%20zakaria%20zohannes.png', picSource: 'ikpni.or.id', anim: ANIM + 'wilhelmus.png', vid: GIF + 'wilhelmus.mp4', vo: AUD + 'vo_wilhelmus%20zakaria.mp3' },
+    { id: 'ratulangi', pin: [65.0, 28.0], name: 'Dr. Gerungan Saul Samuel Jacob (Sam) Ratulangi', origin: 'Tondano, Sulawesi Utara', island: 'Pulau Sulawesi', story: 'Gubernur pertama Sulawesi yang terkenal dengan falsafah hidupnya "Si Tou Timou Tumou Tou": manusia baru dapat disebut manusia jika sudah memanusiakan manusia lain.', pic: IMG + 'pop%20sam%20ratulangi.png', picSource: 'esi.kemenbud.go.id', anim: ANIM + 'sam%20ratulangi.png', vid: GIF + 'sam.mp4', vo: AUD + 'vo_sam%20ratulangi.mp3' },
+    { id: 'leimena', pin: [74.0, 48.0], name: 'Dr. Johannes Leimena', origin: 'Ambon, Maluku', island: 'Kepulauan Maluku', story: 'Menteri Kesehatan terlama Indonesia, pencetus Leimena Plan yang menjadi cikal bakal berdirinya Puskesmas di pelosok daerah.', pic: IMG + 'pop%20Johannes%20Leimana.png', picSource: 'esi.kemenbud.go.id', anim: ANIM + 'leimana.png', vid: GIF + 'leimana.mp4', vo: AUD + 'vo_leimena.mp3' },
+    { id: 'rajasekar', pin: [81.74, 48.94], name: 'Machmud Singgirei Rumagesan (Raja Sekar)', origin: 'Fakfak, Papua Barat', island: 'Papua', story: 'Pemimpin adat yang menentang kekuasaan kolonial Belanda di Papua Barat. Mengibarkan bendera Merah Putih sebagai simbol perlawanan dan kesetiaan terhadap Republik Indonesia.', pic: IMG + 'pop%20machmud%20singgirei%20raja%20sekar.png', picSource: 'commons.wikimedia.org', anim: ANIM + 'raja%20sekar.png', vid: GIF + 'raja.mp4', vo: AUD + 'vo_raja%20sekar.mp3' },
+    { id: 'frans', pin: [88.37, 35.67], name: 'Frans Kaisiepo', origin: 'Biak, Papua', island: 'Papua', story: 'Pejuang integrasi Papua ke dalam NKRI dan Gubernur Papua pertama. Tokoh yang mengusulkan nama IRIAN, diabadikan Bank Indonesia pada uang kertas Rp10.000.', pic: IMG + 'pop%20frans%20kaisiepo.png', picSource: 'jdih.bpkp.go.id', anim: ANIM + 'frans%20kaisiepo.png', vid: GIF + 'frans.mp4', vo: AUD + 'vo_frans%20kaisiepo.mp3' },
+    { id: 'silas', pin: [90.0, 41.53], name: 'Silas Papare', origin: 'Serui, Papua', island: 'Papua', story: 'Pejuang tangguh yang mendirikan Partai Kemerdekaan Indonesia Irian demi menyatukan wilayah Papua ke dalam NKRI.', pic: IMG + 'pop%20silas%20papare.png', picSource: 'esi.kemenbud.go.id', anim: ANIM + 'silas%20papare.png', vid: GIF + 'papare.mp4', vo: AUD + 'vo_silas%20papare.mp3' }
+  ];
+
+  const QUIZ = [
+    { q: 'Siapakah bapak pendidikan nasional pendiri Taman Siswa?', options: ['Ki Hadjar Dewantara', 'Sam Ratulangi'], correct: 0 },
+    { q: 'Pahlawan nasional ahli radiologi/rontgen pertama di Indonesia berasal dari daerah mana?', options: ['Pulau Rote, NTT', 'Solok, Sumbar'], correct: 0 },
+    { q: 'Siapakah pahlawan nasional dari Papua yang diabadikan pada uang kertas Rp10.000?', options: ['Frans Kaisiepo', 'Silas Papare'], correct: 0 },
+    { q: 'Pahlawan yang mendirikan Kautamaan Istri dan jadi pelopor pendidikan bagi kaum perempuan adalah\u2026', options: ['R. A. Kartini', 'Dewi Sartika'], correct: 1 },
+    { q: 'Siapakah pahlawan nasional yang berasal dari Minahasa, Sulawesi Utara?', options: ['Ki Hadjar Dewantara', 'Sam Ratulangi'], correct: 1 }
+  ];
+
+  const CHALLENGE = 'Siapakah tokoh pahlawan lokal atau pejuang kemerdekaan yang berasal dari daerahmu? Tuliskan di buku catatanmu nama, asal daerah, serta 1 nilai keteladanan sikapnya (seperti pantang menyerah atau cinta tanah air) yang bisa kamu tiru dalam kehidupanmu sehari-hari! Yuk, tuliskan hasil jawabannya di buku catatanmu! Sampai jumpa!';
+
+  const $ = function (s) { return document.querySelector(s); };
+  const $$ = function (s) { return document.querySelectorAll(s); };
+
+  const stage = $('#stage');
+  const screens = { start: $('#screen-start'), map: $('#screen-map'), 'challenge-intro': $('#screen-challenge-intro'), quiz: $('#screen-quiz') };
+
+  let soundOn = true;
+  let voOn = true;
+  let visited = {};
+  let quizIndex = 0;
+  let quizScore = 0;
+  let answered = false;
+  let activeHero = null;
+
+  function fitStage() {
+    const vw = window.visualViewport ? window.visualViewport.width : window.innerWidth;
+    const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    const isFS = !!document.fullscreenElement;
+    const s = Math.max(vw / 1920, vh / 1080);
+    const cx = (vw - 1920 * s) / 2;
+    const cy = (vh - 1080 * s) / 2;
+    stage.style.transform = 'scale(' + s + ')';
+    stage.style.left = cx + 'px';
+    stage.style.top = cy + 'px';
+    document.body.style.backgroundPosition = cx + 'px ' + cy + 'px';
+    document.body.style.backgroundSize = (1920 * s) + 'px ' + (1080 * s) + 'px';
+    var padTop = isFS ? '18px' : '18px';
+    var padSide = isFS ? '30px' : '80px';
+    var topOffset = isFS ? '0px' : '68px';
+    $$('.topbar').forEach(function (t) { t.style.padding = padTop + ' ' + padSide + ' 0 ' + padSide; t.style.top = topOffset; });
+    $('#screen-start .center').style.paddingTop = isFS ? '130px' : '170px';
+    $('#map-panel').style.top = isFS ? '120px' : '160px';
+  }
+  window.addEventListener('resize', fitStage);
+  window.addEventListener('orientationchange', function () { setTimeout(fitStage, 200); });
+  document.addEventListener('fullscreenchange', fitStage);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', fitStage);
+    window.visualViewport.addEventListener('scroll', fitStage);
+  }
+  fitStage();
+
+  const sfxHover = new Audio(AUD + 'move_cursor_11.wav');
+  const sfxClick = new Audio(AUD + 'cursor_click_01.wav');
+  const sfxDing = new Audio(AUD + 'ding.mp3');
+  const sfxWrong = new Audio(AUD + 'wrong.mp3');
+  const bgm = new Audio(AUD + 'backsound-light-ukulele.wav');
+  bgm.loop = true;
+  bgm.volume = 0.35;
+  const BGM_VOL = 0.35;
+  const BGM_DUCK = 0.04;
+  function duckBgm() { bgm.volume = BGM_DUCK; }
+  function unduckBgm() { bgm.volume = BGM_VOL; }
+
+  let vo = null;
+  function stopVO() {
+    if (vo) { vo.pause(); vo.currentTime = 0; }
+  }
+  function playVO(src, label) {
+    if (!voOn || !soundOn) return;
+    stopVO();
+    if (introPlaying) { introAudio.pause(); introAudio.currentTime = 0; introPlaying = false; hideVoPopup(); setVoButtons(); }
+    vo = new Audio(src);
+    vo.onended = function () { unduckBgm(); };
+    duckBgm();
+    vo.play().catch(function () {});
+  }
+
+  function playHover() {
+    if (!soundOn) return;
+    try { sfxHover.currentTime = 0; sfxHover.volume = 0.25; sfxHover.play(); } catch (e) {}
+  }
+  function playClick() {
+    if (!soundOn) return;
+    try { sfxClick.currentTime = 0; sfxClick.volume = 0.4; sfxClick.play(); } catch (e) {}
+  }
+  function playDing() {
+    if (!soundOn) return;
+    try { sfxDing.currentTime = 0; sfxDing.volume = 0.7; sfxDing.play(); } catch (e) {}
+  }
+  function playWrong() {
+    if (!soundOn) return;
+    try { sfxWrong.currentTime = 0; sfxWrong.volume = 0.7; sfxWrong.play(); } catch (e) {}
+  }
+  function playBgm() {
+    if (!soundOn) { bgm.pause(); return; }
+    bgm.play().catch(function () {});
+  }
+  function toggleMusic() {
+    playClick();
+    soundOn = !soundOn;
+    if (!soundOn) {
+      bgm.pause();
+    } else {
+      playBgm();
+    }
+    setVoButtons();
+  }
+
+  function applySoundButtons() {
+    setVoButtons();
+    const voSrc = voOn ? IMG + 'btn_vo%20on.svg' : IMG + 'btn_vo%20off.svg';
+    $('#btn-vo img').src = voSrc;
+  }
+
+  function showScreen(name) {
+    Object.keys(screens).forEach(function (k) {
+      screens[k].classList.toggle('active', k === name);
+    });
+    var bgMap = { start: '#2b3d2a', map: '#6d8669', quiz: '#6d8669' };
+    document.body.style.background = bgMap[name] || '#000';
+  }
+
+  function openModal(id) {
+    stopVO();
+    $('#' + id).classList.add('active');
+  }
+  function closeModal(id) {
+    $('#' + id).classList.remove('active');
+  }
+
+  function renderPins() {
+    const box = $('#pins');
+    box.innerHTML = '';
+    HEROES.forEach(function (h) {
+      const b = document.createElement('button');
+      b.className = 'pin-btn' + (visited[h.id] ? ' visited' : ' pulse');
+      b.dataset.name = h.name;
+      b.style.left = h.pin[0] + '%';
+      b.style.top = h.pin[1] + '%';
+      const img = document.createElement('img');
+      img.src = IMG + 'icon_geo.svg';
+      img.alt = h.name;
+      b.appendChild(img);
+      b.addEventListener('click', function () { onPinClick(h); });
+      b.addEventListener('mouseenter', playHover);
+      box.appendChild(b);
+      h.btn = b;
+    });
+  }
+
+  function updateProgress() {
+    const n = Object.keys(visited).length;
+    $('#progress-count').textContent = n + ' / 13';
+    $('#progress-fill').style.width = (n / 13 * 100) + '%';
+    const unlocked = n >= 13;
+    $('#btn-tantangan').classList.toggle('locked', !unlocked);
+    if (unlocked) playBgm();
+  }
+
+  let zoomTimer = null;
+  function onPinClick(h) {
+    if (activeHero) return;
+    playClick();
+    const canvas = $('#map-canvas');
+    canvas.style.transformOrigin = h.pin[0] + '% ' + h.pin[1] + '%';
+    canvas.style.transform = 'scale(2.4)';
+    activeHero = h;
+    zoomTimer = setTimeout(function () {
+      openHero(h);
+    }, 800);
+  }
+
+  function resetZoom() {
+    const canvas = $('#map-canvas');
+    canvas.style.transformOrigin = '0 0';
+    canvas.style.transform = 'scale(1)';
+  }
+
+  let spriteTimer = null;
+  let spriteFrame = 0;
+  let typeTimer = null;
+  function spriteUrl(h, i) { return h.sprite.base + String(i).padStart(5, '0') + '.png'; }
+  function stopSprite() {
+    if (spriteTimer) { clearInterval(spriteTimer); spriteTimer = null; }
+  }
+  function stopType() {
+    if (typeTimer) { clearInterval(typeTimer); typeTimer = null; }
+  }
+  function typeText(el, text, cb) {
+    stopType();
+    el.innerHTML = '<span class="cursor"></span>';
+    var i = 0;
+    typeTimer = setInterval(function () {
+      if (i < text.length) {
+        el.innerHTML = text.substring(0, i + 1) + '<span class="cursor"></span>';
+        i++;
+      } else {
+        stopType();
+        el.innerHTML = text;
+        if (cb) cb();
+      }
+    }, 30);
+  }
+
+  function openHero(h) {
+    if (h.btn) h.btn.classList.remove('pulse');
+    $('#hero-scene').textContent = 'Eksplorasi: ' + h.island;
+    $('#hero-name').textContent = h.name;
+    $('#hero-origin').textContent = h.origin;
+    typeText($('#hero-story'), h.story);
+    $('#hero-pic').src = h.pic;
+    $('#hero-pic-source').textContent = h.picSource ? 'Sumber Foto: ' + h.picSource : '';
+      const body3d = document.querySelector('.hero-body3d');
+      const sp = $('#hero-sprite');
+      const gf = $('#hero-gif');
+      const vd = $('#hero-vid');
+      stopSprite();
+      
+      body3d.style.display = 'none';
+      sp.style.display = 'none';
+      gf.style.display = 'none';
+      if(vd) vd.style.display = 'none';
+
+      if (h.vid) {
+        if(vd) {
+          vd.style.display = 'block';
+          vd.src = h.vid;
+        }
+      } else if (h.gif) {
+        gf.style.display = 'block';
+        gf.src = h.gif;
+      } else if (h.sprite) {
+        sp.style.display = 'block';
+        spriteFrame = 0;
+        sp.src = spriteUrl(h, 0);
+        spriteTimer = setInterval(function () {
+          spriteFrame = (spriteFrame + 1) % h.sprite.n;
+          sp.src = spriteUrl(h, spriteFrame);
+        }, 50);
+      } else {
+        body3d.style.display = 'block';
+        $$('.hero-photo .face').forEach(function (im) { im.src = h.anim; });
+      }
+      openModal('hero-modal');
+    playVO(h.vo, true);
+  }
+
+  function closeHero() {
+    stopSprite();
+    stopType();
+    if (activeHero) {
+      visited[activeHero.id] = 1;
+      if (activeHero.btn) { activeHero.btn.classList.remove('pulse'); activeHero.btn.classList.add('visited'); }
+      updateProgress();
+    }
+    if (zoomTimer) { clearTimeout(zoomTimer); zoomTimer = null; }
+    stopVO();
+    resetZoom();
+    closeModal('hero-modal');
+    activeHero = null;
+  }
+
+  $('#btn-hero-close').addEventListener('click', function () {
+    playClick();
+    closeHero();
+  });
+  $('#btn-vo').addEventListener('click', function () {
+    playClick();
+    voOn = !voOn;
+    applySoundButtons();
+    if (!voOn) {
+      stopVO();
+    } else if (activeHero) {
+      playVO(activeHero.vo, true);
+    }
+  });
+
+  $('#btn-guide-close').addEventListener('click', function () {
+    playClick(); stopVO(); closeModal('guide-modal');
+  });
+
+  $('#btn-guide').addEventListener('click', function () {
+    playClick(); openModal('guide-modal'); playVO(AUD + '2_petunjuk.mp3');
+  });
+
+  $('#btn-mulai').addEventListener('click', function () {
+    // if (!introFinished) return;
+    playClick();
+    playBgm();
+    showScreen('map');
+    updateProgress();
+    renderPins();
+    openModal('guide-modal');
+    playVO(AUD + '2_petunjuk.mp3');
+  });
+
+  $('#btn-tantangan').addEventListener('click', function () {
+    if (visitedCount() < 13) return;
+    playClick();
+    showScreen('challenge-intro');
+    $('#btn-start-quiz').classList.add('locked');
+    playVO(AUD + '4_tantangan.mp3');
+    if (vo) {
+      vo.onended = function () {
+        unduckBgm();
+        $('#btn-start-quiz').classList.remove('locked');
+      };
+    } else {
+      $('#btn-start-quiz').classList.remove('locked');
+    }
+  });
+
+  function visitedCount() { return Object.keys(visited).length; }
+
+  function startQuiz() {
+    quizIndex = 0;
+    quizScore = 0;
+    answered = false;
+    showScreen('quiz');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    answered = false;
+    const item = QUIZ[quizIndex];
+    $('#q-progress').textContent = 'Soal ' + (quizIndex + 1) + ' dari ' + QUIZ.length;
+    $('#q-text').textContent = item.q;
+    $('#q-feedback').textContent = '';
+    $('#q-next-wrap').innerHTML = '';
+    const box = $('#q-options');
+    box.innerHTML = '';
+    item.options.forEach(function (opt, idx) {
+      const b = document.createElement('div');
+      b.className = 'q-option';
+      b.textContent = opt;
+      b.addEventListener('click', function () { onAnswer(idx); });
+      b.addEventListener('mouseenter', playHover);
+      box.appendChild(b);
+    });
+  }
+
+  function onAnswer(idx) {
+    if (answered) return;
+    answered = true;
+    playClick();
+    const item = QUIZ[quizIndex];
+    const opts = $('#q-options').querySelectorAll('.q-option');
+    const correct = item.correct === idx;
+    if (correct) {
+      quizScore++;
+      opts[idx].classList.add('correct');
+      $('#q-feedback').textContent = 'Benar! Hebat! \u2b50';
+      spawnKoin();
+      playDing();
+    } else {
+      opts[idx].classList.add('wrong');
+      opts[item.correct].classList.add('correct');
+      $('#q-feedback').textContent = 'Belum tepat. Jawaban yang benar: ' + item.options[item.correct];
+      playWrong();
+    }
+    opts.forEach(function (o) { o.classList.add('disabled'); });
+    const wrap = $('#q-next-wrap');
+    const btn = document.createElement('button');
+    btn.className = 'wide-btn btn-css';
+    const lbl = document.createElement('span');
+    lbl.className = 'lbl';
+    lbl.textContent = quizIndex + 1 < QUIZ.length ? 'SOAL BERIKUT' : 'LIHAT HASIL';
+    btn.appendChild(lbl);
+    btn.addEventListener('click', function () {
+      playClick();
+      if (quizIndex + 1 < QUIZ.length) {
+        quizIndex++;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    });
+    wrap.appendChild(btn);
+  }
+
+  function spawnKoin() {
+    const s = stage;
+    for (let i = 0; i < 6; i++) {
+      const k = document.createElement('div');
+      k.className = 'koin';
+      k.textContent = ['\u2b50', '\u2b50', '\u2728', '\u2b50'][i % 4];
+      k.style.left = (820 + Math.random() * 300) + 'px';
+      k.style.top = (500 + Math.random() * 120) + 'px';
+      k.style.animationDelay = (Math.random() * 0.3) + 's';
+      s.appendChild(k);
+      setTimeout(function () { k.remove(); }, 1400);
+    }
+  }
+
+  function confetti() {
+    const colors = ['#ef4354', '#ffd75e', '#90ae8a', '#5c3b1a', '#fcf4df', '#2e3192'];
+    for (let i = 0; i < 90; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = (Math.random() * 1920) + 'px';
+      c.style.background = colors[i % colors.length];
+      c.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+      c.style.animationDuration = (2 + Math.random() * 1.8) + 's';
+      c.style.animationDelay = (Math.random() * 0.8) + 's';
+      stage.appendChild(c);
+      setTimeout(function () { c.remove(); }, 5000);
+    }
+  }
+
+  function showResult() {
+    var feedbackMap = {
+      1: 'Yaaah, kamu benar 1 dari 5 soal. Yuk, belajar lagi dan coba lagi tantangannya!',
+      2: 'Kamu baru benar 2 dari 5 soal. Ayo tetap semangat dan berusaha lagi, ya!',
+      3: 'Hebat, kamu benar 3 dari 5 soal! Tingkatkan terus semangat belajarmu, ya!',
+      4: 'Keren! Kamu menjawab benar 4 dari 5 soal. Pertahankan prestasimu ini!',
+      5: 'Luar biasa! Selamat kamu benar 5 dari 5 soal. Kamu hebat!'
+    };
+    $('#result-title').textContent = 'SELAMAT!';
+    $('#result-feedback').textContent = feedbackMap[quizScore] || '';
+    var starsHtml = '';
+    for (var i = 1; i <= 5; i++) {
+      starsHtml += '<span class="star ' + (i <= quizScore ? 'gold' : 'empty') + '">&#9733;</span>';
+    }
+    $('#result-stars').innerHTML = starsHtml;
+    openModal('result-modal');
+    playVO(AUD + 'vo_benar-' + quizScore + '.mp3');
+    const win = new Audio(AUD + 'Orchestral-brass-win.mp3');
+    win.volume = 0.9;
+    setTimeout(function () { win.play().catch(function () {}); }, 300);
+    if (quizScore >= 4) { setTimeout(confetti, 500); }
+  }
+
+  $('#btn-ulangi').addEventListener('click', function () {
+    playClick();
+    closeModal('result-modal');
+    startQuiz();
+  });
+  $('#btn-keluar-final').addEventListener('click', function () {
+    playClick();
+    closeModal('result-modal');
+    openExit();
+  });
+
+  function openExit() {
+    openModal('exit-modal');
+  }
+  function doExit() {
+    stopVO();
+    bgm.pause();
+    const msg = 'Terima kasih sudah menjelajah jejak pahlawan! Sampai jumpa lagi.';
+    $('#exit-modal .exit-title').textContent = msg;
+    $('#exit-modal .exit-text').textContent = '';
+    $('#exit-modal .exit-actions').style.display = 'none';
+    setTimeout(function () {
+      try { window.close(); } catch (e) {}
+    }, 1500);
+  }
+  $('#btn-exit-yes').addEventListener('click', function () {
+    playClick(); doExit();
+  });
+  $('#btn-exit-no').addEventListener('click', function () {
+    playClick(); closeModal('exit-modal');
+  });
+
+
+  function toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.documentElement.requestFullscreen().catch(function () {});
+    }
+  }
+
+  $$('.icon-btn').forEach(function (b) {
+    b.addEventListener('mouseenter', playHover);
+  });
+  $$('.wide-btn').forEach(function (b) {
+    b.addEventListener('mouseenter', playHover);
+  });
+
+  $('#btn-mute-start').addEventListener('click', tryIntro);
+  $('#btn-mute-map').addEventListener('click', toggleMusic);
+  $('#btn-mute-quiz').addEventListener('click', toggleMusic);
+  $('#btn-mute-challenge').addEventListener('click', toggleMusic);
+  $('#btn-fs-start').addEventListener('click', function () { playClick(); toggleFullscreen(); });
+  $('#btn-fs-map').addEventListener('click', function () { playClick(); toggleFullscreen(); });
+  $('#btn-fs-quiz').addEventListener('click', function () { playClick(); toggleFullscreen(); });
+  $('#btn-fs-challenge').addEventListener('click', function () { playClick(); toggleFullscreen(); });
+  $('#btn-start-quiz').addEventListener('click', function () {
+    playClick();
+    startQuiz();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    closeModal('guide-modal');
+    closeModal('exit-modal');
+    if ($('#hero-modal').classList.contains('active')) {
+      closeHero();
+    } else {
+      closeModal('result-modal');
+    }
+  });
+
+  let introPlaying = false;
+  let introFinished = false;
+  let introDuration = 0;
+  const introAudio = new Audio(AUD + '1_halo%20anak-anak.mp3');
+  introAudio.addEventListener('loadedmetadata', function () { introDuration = introAudio.duration || 0; });
+  introAudio.addEventListener('ended', function () {
+    introPlaying = false;
+    introFinished = true;
+    unduckBgm();
+    hideVoPopup();
+    setVoButtons();
+    setMulaiState();
+  });
+  let voCountTimer = null;
+  function showVoPopup() {
+    return;
+    const box = $('#intro-count');
+    clearInterval(voCountTimer);
+    box.classList.add('active');
+    const dur = introDuration || 0;
+    const countEl = $('#intro-remaining');
+    const tick = function () {
+      if (dur > 0) {
+        const rem = Math.max(0, Math.ceil(dur - introAudio.currentTime));
+        countEl.textContent = rem;
+        if (rem <= 0) clearInterval(voCountTimer);
+      } else {
+        countEl.textContent = '...';
+      }
+    };
+    tick();
+    voCountTimer = setInterval(tick, 200);
+  }
+  function hideVoPopup() {
+    clearInterval(voCountTimer);
+    $('#intro-count').classList.remove('active');
+  }
+  function playIntro() {
+    stopVO();
+    introAudio.currentTime = 0;
+    introAudio.play().then(function () {
+      introPlaying = true;
+      introFinished = false;
+      duckBgm();
+      showVoPopup();
+      setVoButtons();
+      setMulaiState();
+    }).catch(function () {});
+  }
+  function setMulaiState() {
+    const btn = $('#btn-mulai');
+    if (!btn) return;
+    // btn.classList.toggle('locked', !introFinished);
+  }
+  function setVoButtons() {
+    const src = introPlaying ? IMG + 'btn_vo%20on.svg' : IMG + 'btn_vo%20off.svg';
+    $$('#btn-mute-start img').forEach(function (i) { i.src = src; });
+    const src2 = soundOn ? IMG + 'btn_unmute.svg' : IMG + 'btn_mute.svg';
+    $$('#btn-mute-map img, #btn-mute-quiz img').forEach(function (i) { i.src = src2; });
+  }
+  function skipIntro() {
+    playClick();
+    introAudio.pause();
+    introAudio.currentTime = 0;
+    introPlaying = false;
+    introFinished = true;
+    unduckBgm();
+    hideVoPopup();
+    setVoButtons();
+    setMulaiState();
+  }
+  $('#btn-intro-close').addEventListener('click', skipIntro);
+  function tryIntro(e) {
+    if (!screens.start.classList.contains('active')) return;
+    if (e && e.target && e.target.closest && e.target.closest('#btn-mulai')) return;
+    if (introPlaying) return;
+    playBgm();
+    playIntro();
+  }
+  window.addEventListener('load', tryIntro);
+  window.addEventListener('pointerdown', tryIntro);
+  window.addEventListener('keydown', tryIntro);
+
+  applySoundButtons();
+  setMulaiState();
+  renderPins();
+  updateProgress();
+
+  var ciIndex = 0;
+  var ciSlides = $$('#carousel-inline-slides .carousel-inline-slide');
+  var ciDotsEl = $('#carousel-inline-dots');
+  var ciBtnPrev = $('#btn-carousel-prev');
+  var ciBtnNext = $('#btn-carousel-next');
+  var ciMulai = $('#btn-mulai');
+
+  function renderCiDots() {
+    ciDotsEl.innerHTML = '';
+    ciSlides.forEach(function (_, i) {
+      var d = document.createElement('div');
+      d.className = 'carousel-inline-dot' + (i === ciIndex ? ' active' : '');
+      d.addEventListener('click', function () { goToCiSlide(i); });
+      ciDotsEl.appendChild(d);
+    });
+  }
+
+  function goToCiSlide(idx) {
+    ciIndex = idx;
+    ciSlides.forEach(function (s, i) { s.classList.toggle('active', i === idx); });
+    renderCiDots();
+    var isLast = idx === ciSlides.length - 1;
+    ciBtnPrev.classList.toggle('hidden', idx === 0);
+  }
+
+  ciBtnNext.addEventListener('click', function () {
+    playClick();
+    if (ciIndex < ciSlides.length - 1) {
+      goToCiSlide(ciIndex + 1);
+    }
+  });
+  ciBtnPrev.addEventListener('click', function () {
+    playClick();
+    if (ciIndex > 0) goToCiSlide(ciIndex - 1);
+  });
+
+  goToCiSlide(0);
+})();
+</script>
+</body>
+</html>
