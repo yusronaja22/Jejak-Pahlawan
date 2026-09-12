@@ -31,6 +31,7 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #2b3d2a; f
 .icon-btn img { width: 100%; height: 100%; pointer-events: none; }
 .icon-btn:hover { transform: scale(1.12); }
 .icon-btn:active { transform: scale(0.94) translateY(2px); }
+.icon-btn.locked { filter: grayscale(1) drop-shadow(0 4px 0 rgba(0,0,0,0.25)); opacity: 0.5; pointer-events: none; }
 
 #screen-start .center, #screen-carousel .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 44px; padding-top: 130px; z-index: 5; }
 .start-hero-img { position: absolute; bottom: 0; height: 820px; z-index: 4; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.35)); pointer-events: none; }
@@ -208,42 +209,6 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
 
   <section id="screen-start" class="screen active">
     <img class="bg" src="assets/images/BG.svg" alt="">
-    <div class="start-hero-left-wrap">
-      <img class="start-hero-img silhouette" src="assets/images/sisinga_00035.png" alt="Sisingamangaraja XII">
-      <svg class="magnify-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="lensGrad" cx="35%" cy="35%" r="65%">
-            <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
-            <stop offset="100%" stop-color="rgba(252,244,223,0.08)"/>
-          </radialGradient>
-          <linearGradient id="handleGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#e6c56a"/>
-            <stop offset="50%" stop-color="#c9a84c"/>
-            <stop offset="100%" stop-color="#8b6914"/>
-          </linearGradient>
-          <linearGradient id="rimGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#ffe9a8"/>
-            <stop offset="40%" stop-color="#e6a817"/>
-            <stop offset="100%" stop-color="#8b6914"/>
-          </linearGradient>
-        </defs>
-        <!-- lens glow -->
-        <circle cx="46" cy="46" r="34" fill="rgba(255,215,0,0.12)"/>
-        <!-- outer rim -->
-        <circle cx="46" cy="46" r="30" fill="none" stroke="url(#rimGrad)" stroke-width="5"/>
-        <!-- inner rim -->
-        <circle cx="46" cy="46" r="25" fill="none" stroke="rgba(252,244,223,0.3)" stroke-width="1.5"/>
-        <!-- lens -->
-        <circle cx="46" cy="46" r="24" fill="url(#lensGrad)"/>
-        <!-- lens reflection -->
-        <ellipse cx="38" cy="38" rx="10" ry="7" fill="rgba(255,255,255,0.25)" transform="rotate(-30 38 38)"/>
-        <!-- handle -->
-        <rect x="64" y="64" width="8" height="32" rx="4" transform="rotate(-45 68 80)" fill="url(#handleGrad)" stroke="#8b6914" stroke-width="1"/>
-        <!-- handle ring -->
-        <circle cx="88" cy="88" r="5" fill="none" stroke="#e6a817" stroke-width="2.5"/>
-      </svg>
-    </div>
-    <img class="start-hero-img hero-right" src="assets/images/antasari_00025.png" alt="Pangeran Antasari">
     <div class="topbar">
       <div class="left">
         <img class="logo" src="assets/images/Logo-Kemendikdasmen.svg" alt="Kemendikdasmen">
@@ -419,7 +384,6 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
         <img class="hero-sprite" id="hero-sprite" src="" alt="">
         <img class="hero-gif" id="hero-gif" src="" alt="">
         <video class="hero-gif" id="hero-vid" src="" autoplay loop muted playsinline style="display:none;"></video>
-        <img class="hero-podium" src="assets/images/podium.png" alt="podium">
       </div>
       <div class="hero-info">
         <img class="hero-pic" id="hero-pic" src="" alt="">
@@ -445,10 +409,6 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
     <div id="result-box">
       <div class="r-title" id="result-title"></div>
       <div class="r-feedback" id="result-feedback"></div>
-      <div class="r-podium-wrap">
-        <img class="r-podium" src="assets/images/podium.png" alt="">
-        <div class="r-stars" id="result-stars"></div>
-      </div>
       <div class="r-actions">
         <button class="wide-btn btn-css" id="btn-ulangi"><span class="lbl">ULANGI</span></button>
         <button class="wide-btn btn-css" id="btn-keluar-final"><span class="lbl">KELUAR</span></button>
@@ -584,14 +544,22 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
   function stopVO() {
     if (vo) { vo.pause(); vo.currentTime = 0; }
   }
-  function playVO(src, label) {
-    if (!voOn || !soundOn) return;
+  function playVO(src, onEndCb) {
+    if (!voOn || !soundOn) {
+      if (typeof onEndCb === 'function') onEndCb();
+      return;
+    }
     stopVO();
     if (introPlaying) { introAudio.pause(); introAudio.currentTime = 0; introPlaying = false; hideVoPopup(); setVoButtons(); }
     vo = new Audio(src);
-    vo.onended = function () { unduckBgm(); };
+    vo.onended = function () { 
+      unduckBgm(); 
+      if (typeof onEndCb === 'function') onEndCb();
+    };
     duckBgm();
-    vo.play().catch(function () {});
+    vo.play().catch(function () {
+      if (typeof onEndCb === 'function') onEndCb();
+    });
   }
 
   function playHover() {
@@ -761,7 +729,10 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
         $$('.hero-photo .face').forEach(function (im) { im.src = h.anim; });
       }
       openModal('hero-modal');
-    playVO(h.vo, true);
+      $('#btn-hero-close').classList.add('locked');
+      playVO(h.vo, function() {
+        $('#btn-hero-close').classList.remove('locked');
+      });
   }
 
   function closeHero() {
@@ -780,6 +751,7 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
   }
 
   $('#btn-hero-close').addEventListener('click', function () {
+    if (this.classList.contains('locked')) return;
     playClick();
     closeHero();
   });
@@ -789,8 +761,12 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
     applySoundButtons();
     if (!voOn) {
       stopVO();
+      $('#btn-hero-close').classList.remove('locked');
     } else if (activeHero) {
-      playVO(activeHero.vo, true);
+      $('#btn-hero-close').classList.add('locked');
+      playVO(activeHero.vo, function() {
+        $('#btn-hero-close').classList.remove('locked');
+      });
     }
   });
 
@@ -963,11 +939,6 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
     };
     $('#result-title').textContent = 'SELAMAT!';
     $('#result-feedback').textContent = feedbackMap[quizScore] || '';
-    var starsHtml = '';
-    for (var i = 1; i <= 5; i++) {
-      starsHtml += '<span class="star ' + (i <= quizScore ? 'gold' : 'empty') + '">&#9733;</span>';
-    }
-    $('#result-stars').innerHTML = starsHtml;
     openModal('result-modal');
     playVO(AUD + 'vo_benar-' + quizScore + '.mp3');
     const win = new Audio(AUD + 'Orchestral-brass-win.mp3');
@@ -1044,7 +1015,9 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
     closeModal('guide-modal');
     closeModal('exit-modal');
     if ($('#hero-modal').classList.contains('active')) {
-      closeHero();
+      if (!$('#btn-hero-close').classList.contains('locked')) {
+        closeHero();
+      }
     } else {
       closeModal('result-modal');
     }
