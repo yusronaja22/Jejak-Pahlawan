@@ -694,7 +694,11 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
     $('#hero-scene').textContent = 'Eksplorasi: ' + h.island;
     $('#hero-name').textContent = h.name;
     $('#hero-origin').textContent = h.origin;
-    typeText($('#hero-story'), h.story);
+    typeText($('#hero-story'), h.story, function() {
+      if (!voOn || !soundOn || (vo && (vo.paused || vo.ended))) {
+        $('#btn-hero-close').classList.remove('locked');
+      }
+    });
     $('#hero-pic').src = h.pic;
     $('#hero-pic-source').textContent = h.picSource ? 'Sumber Foto: ' + h.picSource : '';
       const body3d = document.querySelector('.hero-body3d');
@@ -712,6 +716,11 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
         if(vd) {
           vd.style.display = 'block';
           vd.src = h.vid;
+          vd.load();
+          var playPromise = vd.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(function(e){});
+          }
         }
       } else if (h.gif) {
         gf.style.display = 'block';
@@ -731,13 +740,20 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
       openModal('hero-modal');
       $('#btn-hero-close').classList.add('locked');
       playVO(h.vo, function() {
-        $('#btn-hero-close').classList.remove('locked');
+        if (typeTimer === null) {
+          $('#btn-hero-close').classList.remove('locked');
+        }
       });
   }
 
   function closeHero() {
     stopSprite();
     stopType();
+    const vd = $('#hero-vid');
+    if (vd) {
+      vd.pause();
+      vd.currentTime = 0;
+    }
     if (activeHero) {
       visited[activeHero.id] = 1;
       if (activeHero.btn) { activeHero.btn.classList.remove('pulse'); activeHero.btn.classList.add('visited'); }
@@ -761,11 +777,15 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
     applySoundButtons();
     if (!voOn) {
       stopVO();
-      $('#btn-hero-close').classList.remove('locked');
+      if (typeTimer === null) {
+        $('#btn-hero-close').classList.remove('locked');
+      }
     } else if (activeHero) {
       $('#btn-hero-close').classList.add('locked');
       playVO(activeHero.vo, function() {
-        $('#btn-hero-close').classList.remove('locked');
+        if (typeTimer === null) {
+          $('#btn-hero-close').classList.remove('locked');
+        }
       });
     }
   });
