@@ -775,18 +775,10 @@ button, .wide-btn, .icon-btn, .pin-btn, .q-option { touch-action: manipulation; 
     playClick();
     voOn = !voOn;
     applySoundButtons();
-    if (!voOn) {
-      stopVO();
-      if (typeTimer === null) {
-        $('#btn-hero-close').classList.remove('locked');
-      }
-    } else if (activeHero) {
-      $('#btn-hero-close').classList.add('locked');
-      playVO(activeHero.vo, function() {
-        if (typeTimer === null) {
-          $('#btn-hero-close').classList.remove('locked');
-        }
-      });
+    if (vo) {
+      vo.muted = !voOn || !soundOn;
+      if (!vo.muted && !vo.paused) duckBgm();
+      else if (vo.muted && !vo.paused) unduckBgm();
     }
   });
 
