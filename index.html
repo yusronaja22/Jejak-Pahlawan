@@ -1748,7 +1748,7 @@
         { id: 'kihajar', pin: [33.39, 73.5], name: 'Ki Hadjar Dewantara', origin: 'D.I. Yogyakarta, Pulau Jawa', island: 'Pulau Jawa', story: 'Bapak Pendidikan Nasional pendiri Perguruan Taman Siswa yang mencetuskan semboyan legendaris "Ing Ngarsa Sung Tuladha, Ing Madya Mangun Karsa, Tut Wuri Handayani".', pic: IMG + 'pop%20ki%20hadjar%20dewantara.png', picSource: 'ikpni.or.id', anim: ANIM + 'ki%20hadjar%20dewantara.png', vid: GIF + 'ki%20hadjar.mp4', vo: AUD + 'vo_ki%20hajar.mp3' },
         { id: 'antasari', pin: [42.97, 51.68], name: 'Pangeran Antasari', origin: 'Kesultanan Banjar, Kalimantan Selatan', island: 'Pulau Kalimantan', story: 'Sultan Banjar pimpinan Perang Banjar yang pantang menyerah melawan Belanda dengan semboyan legendaris: "Haram Menyerah, Waja Sampai Kaputing!"', pic: IMG + 'pop%20pangeran%20antasari.png', picSource: 'ikpni.or.id', anim: ANIM + 'pangeran%20antasari.png', vid: GIF + 'antasari.mp4', vo: AUD + 'vo_pangeran%20antasari.mp3' },
         { id: 'ngurah', pin: [43.91, 74.5], name: 'I Gusti Ngurah Rai', origin: 'Badung, Bali', island: 'Pulau Bali', story: 'Pemimpin Perang Puputan Margarana yang bertempur habis-habisan demi mempertahankan tanah Bali.', pic: IMG + 'pop%20i%20gusti%20ngurah%20rai.png', picSource: 'mow.anri.go.id', anim: ANIM + 'ngurah%20rai.png', vid: GIF + 'ngurang.mp4', vo: AUD + 'vo_i%20gusti%20ngurah%20rai.mp3' },
-        { id: 'tgkh', pin: [46.47, 75.5], name: 'TGKH. Muhammad Zainuddin Abdul Madjid', origin: 'Lombok, Nusa Tenggara Barat', island: 'Nusa Tenggara', story: 'Ulama pejuang pendiri organisasi Islam Nahdlatul Wathan (NW) sebagai pusat pendidikan moral pejuang kemerdekaan.', pic: IMG + 'pop%20TGKH%20Abdul%20Madjid.png', picSource: 'nwdi.or.id', anim: ANIM + 'tgkh%20abdul%20madjid.png', vid: GIF + 'tgkh.mp4', vo: AUD + 'vo_TGKH%20abdul%20majid.mp3' },
+        { id: 'tgkh', pin: [46.47, 75.5], name: 'TGKH. Muhammad Zainuddin Abdul Madjid', origin: 'Lombok, Nusa Tenggara Barat', island: 'Nusa Tenggara', story: 'Ulama pejuang pendiri organisasi Islam Nahdlatul Wathan (NW) sebagai pusat pendidikan moral pejuang kemerdekaan.', pic: IMG + 'pop%20TGKH%20Abdul%20Madjid.png', picSource: 'nwdi.or.id', anim: ANIM + 'tgkh%20abdul%20madjid.png', vid: GIF + 'TGKH.mp4', gif: GIF + 'tgkh.gif', vo: AUD + 'vo_TGKH%20abdul%20majid.mp3' },
         { id: 'zakaria', pin: [63.0, 82.0], name: 'Prof. Dr. Wilhelmus Zakaria Johannes', origin: 'Pulau Rote, NTT', island: 'Nusa Tenggara', story: 'Pahlawan nasional ahli radiologi/rontgen pertama di Indonesia yang berjasa besar dalam dunia kedokteran.', pic: IMG + 'pop%20zakaria%20zohannes.png', picSource: 'ikpni.or.id', anim: ANIM + 'wilhelmus.png', vid: GIF + 'wilhelmus.mp4', vo: AUD + 'vo_wilhelmus%20zakaria.mp3' },
         { id: 'ratulangi', pin: [65.0, 28.0], name: 'Dr. Gerungan Saul Samuel Jacob (Sam) Ratulangi', origin: 'Tondano, Sulawesi Utara', island: 'Pulau Sulawesi', story: 'Gubernur pertama Sulawesi yang terkenal dengan falsafah hidupnya "Si Tou Timou Tumou Tou": manusia baru dapat disebut manusia jika sudah memanusiakan manusia lain.', pic: IMG + 'pop%20sam%20ratulangi.png', picSource: 'esi.kemenbud.go.id', anim: ANIM + 'sam%20ratulangi.png', vid: GIF + 'sam.mp4', vo: AUD + 'vo_sam%20ratulangi.mp3' },
         { id: 'leimena', pin: [74.0, 48.0], name: 'Dr. Johannes Leimena', origin: 'Ambon, Maluku', island: 'Kepulauan Maluku', story: 'Menteri Kesehatan terlama Indonesia, pencetus Leimena Plan yang menjadi cikal bakal berdirinya Puskesmas di pelosok daerah.', pic: IMG + 'pop%20Johannes%20Leimana.png', picSource: 'esi.kemenbud.go.id', anim: ANIM + 'leimana.png', vid: GIF + 'leimana.mp4', vo: AUD + 'vo_leimena.mp3' },
@@ -2009,6 +2009,28 @@
         if (h.vid) {
           if (vd) {
             vd.style.display = 'block';
+            vd.onerror = function () {
+              if (vd.src.indexOf('tgkh.mp4') !== -1) {
+                vd.src = GIF + 'TGKH.mp4';
+                vd.load();
+                vd.play().catch(function () { });
+                return;
+              } else if (vd.src.indexOf('TGKH.mp4') !== -1 && h.gif) {
+                vd.style.display = 'none';
+                gf.style.display = 'block';
+                gf.src = h.gif;
+                return;
+              }
+              if (h.gif) {
+                vd.style.display = 'none';
+                gf.style.display = 'block';
+                gf.src = h.gif;
+              } else if (h.pic) {
+                vd.style.display = 'none';
+                gf.style.display = 'block';
+                gf.src = h.pic;
+              }
+            };
             vd.src = h.vid;
             vd.load();
             var playPromise = vd.play();
