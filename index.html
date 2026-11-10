@@ -106,20 +106,26 @@
 
     .topbar .logo,
     .logo-kemendikdasmen {
-      width: clamp(62px, 5.2vw, 80px);
-      height: auto;
-      filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.25));
+      width: 115px;
+      height: 115px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.6)) drop-shadow(0 3px 8px rgba(0, 0, 0, 0.45));
       pointer-events: auto;
-      transition: width 0.3s ease;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
     }
 
-    @media (max-width: 768px),
-    (max-height: 650px) {
+    #screen-start .topbar .logo,
+    #screen-start .logo-kemendikdasmen,
+    #screen-carousel .topbar .logo,
+    #screen-carousel .logo-kemendikdasmen {
+      width: 130px;
+      height: 130px;
+    }
 
-      .topbar .logo,
-      .logo-kemendikdasmen {
-        width: clamp(43px, 5.8vw, 55px);
-      }
+    .topbar .logo:hover,
+    .logo-kemendikdasmen:hover {
+      transform: scale(1.06);
     }
 
     .icon-btn {
@@ -241,19 +247,32 @@
     }
 
     #screen-start .center .game-title {
-      font-size: 108px;
-      font-weight: 800;
-      color: #5ea2ff;
-      text-align: center;
-      line-height: 1.4;
-      text-shadow: 0 8px 0 rgba(0, 0, 0, 0.3), 0 0 30px rgba(84, 108, 85, 0.9);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-top: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 80px;
+      z-index: 5;
     }
 
-    #screen-start .center .game-title .accent {
-      color: #5ea2ff;
+    .game-title-img {
+      width: 950px;
+      max-width: 90%;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
+      animation: titleFloat 3.5s ease-in-out infinite;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    @keyframes titleFloat {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-12px);
+      }
     }
 
     #screen-start .center .game-sub,
@@ -478,7 +497,7 @@
     }
 
     #screen-map {
-      background: linear-gradient(180deg, #6d8669, #97af95 60%, #c7cfa5);
+      background: #72986a url('assets/images/BG-Map.svg') center/cover no-repeat;
     }
 
     #map-panel {
@@ -1492,8 +1511,7 @@
       </div>
       <div class="center">
         <div class="game-title">
-          <div>Jejak Pahlawan</div>
-          <div class="accent">Nusantara</div>
+          <img class="game-title-img" src="assets/images/judul.svg" alt="Jejak Pahlawan Nusantara">
         </div>
         <div class="start-buttons">
           <button class="wide-btn" id="btn-mulai"><img src="assets/images/btn_mulai.svg" alt=""></button>
@@ -1553,6 +1571,7 @@
     </section>
 
     <section id="screen-map" class="screen">
+      <img class="bg" src="assets/images/BG-Map.svg" alt="">
       <div class="topbar">
         <div class="left">
           <img class="logo logo-kemendikdasmen" src="assets/images/Logo-Kemendikdasmen.svg" alt="Kemendikdasmen">
